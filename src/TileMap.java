@@ -27,6 +27,8 @@ public class TileMap {
 		for(int y = 0; y < map.length; y++){
 			for(int x = 0; x < map[0].length; x++){
 				
+				//BufferedImage img = <get the tile img>;
+				
 				int index = map[y][x];
 				int yIndex = 0;
 				
@@ -39,7 +41,7 @@ public class TileMap {
 				int xPos = (int)((x + xOffset) * Game.UNIT);
 				int yPos = (int)((y + yOffset) * Game.UNIT);
 				
-				g.drawImage(tileSheet, xPos, yPos,
+				g.drawImage(tileSheet, xPos, yPos, 
 						xPos + Game.UNIT, yPos + Game.UNIT,
 						index * Game.TILE_SIZE,
 						yIndex * Game.TILE_SIZE,
