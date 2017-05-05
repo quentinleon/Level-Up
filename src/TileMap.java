@@ -41,8 +41,11 @@ public class TileMap {
 				int xPos = (int)((x + xOffset) * Game.UNIT);
 				int yPos = (int)((y + yOffset) * Game.UNIT);
 				
-				g.drawImage(tileSheet, xPos, yPos, 
-						xPos + Game.UNIT, yPos + Game.UNIT,
+				g.drawImage(tileSheet, 
+						xPos, 
+						yPos, 
+						xPos + Game.UNIT, 
+						yPos + Game.UNIT,
 						index * Game.TILE_SIZE,
 						yIndex * Game.TILE_SIZE,
 						(index * Game.TILE_SIZE) + Game.TILE_SIZE,

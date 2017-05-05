@@ -5,6 +5,7 @@ public class InputHandler implements KeyListener {
 
 	public InputHandler(Game game){
 		game.addKeyListener(this);
+		game.setFocusable(true);
 	}
 	
 	public class Key{
