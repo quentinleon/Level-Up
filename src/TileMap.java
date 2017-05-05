@@ -22,27 +22,29 @@ public class TileMap {
 		
 	}
 	
-	public void DrawMap(Graphics g){
+	public void DrawMap(Graphics g, double xOffset, double yOffset){
+				
 		for(int y = 0; y < map.length; y++){
 			for(int x = 0; x < map[0].length; x++){
 				
 				int index = map[y][x];
-				int yOffset = 0;
+				int yIndex = 0;
 				
-				if(index > (tileSheet.getWidth() / Engine.TILE_WIDTH) - 1){
-					yOffset ++;
-					index = index - (tileSheet.getWidth() / Engine.TILE_WIDTH);
+				if(index > (tileSheet.getWidth() / Game.TILE_SIZE) - 1){
+					yIndex ++;
+					index = index - (tileSheet.getWidth() / Game.TILE_SIZE);
 				}
+						
+				//convert world us to pixel Game.UNIT;s
+				int xPos = (int)((x + xOffset) * Game.UNIT);
+				int yPos = (int)((y + yOffset) * Game.UNIT);
 				
-				g.drawImage(tileSheet, 
-						x * Engine.TILE_WIDTH,
-						y * Engine.TILE_HEIGHT,
-						(x * Engine.TILE_WIDTH) + Engine.TILE_WIDTH,
-						(y * Engine.TILE_HEIGHT) + Engine.TILE_HEIGHT,
-						index * Engine.TILE_WIDTH,
-						yOffset * Engine.TILE_HEIGHT,
-						(index * Engine.TILE_WIDTH) + Engine.TILE_WIDTH,
-						(yOffset * Engine.TILE_HEIGHT) + Engine.TILE_HEIGHT,
+				g.drawImage(tileSheet, xPos, yPos,
+						xPos + Game.UNIT, yPos + Game.UNIT,
+						index * Game.TILE_SIZE,
+						yIndex * Game.TILE_SIZE,
+						(index * Game.TILE_SIZE) + Game.TILE_SIZE,
+						(yIndex * Game.TILE_SIZE) + Game.TILE_SIZE,
 						null);
 				
 			}
