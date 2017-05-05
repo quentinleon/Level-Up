@@ -1,9 +1,18 @@
+import java.awt.Dimension;
+import java.awt.Point;
+import javax.swing.JFrame;
 
 public class Main {
-
-	public static void main() {
-		// TODO Start the game!
-
+	
+	public static void main(String args[]){
+		JFrame frame = new JFrame("Level-Up"); //Create a new window named "Level-Up"
+		Engine content = new Engine();
+		frame.setSize(new Dimension(800,600)); //Set it's dimension
+		frame.setLocation(new Point(200,200)); //Set it's position
+		frame.setContentPane(content);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); //Enable the close button
+		frame.setVisible(true); //Show the frame
 	}
-
+	
 }
+	
