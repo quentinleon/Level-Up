@@ -6,20 +6,18 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 
 public class TileMap {
-	private int[][] map;
-	private BufferedImage tileSheet;
+	private Tile[][] map;
 	
-	public TileMap(int[][] existingMap){
-		map = new int[existingMap.length][existingMap[0].length];
+	public TileMap(int rows, int cols){
+		map = new Tile[rows][cols];
 		
 		for(int y = 0; y < map.length; y++){
 			for(int x = 0; x < map[0].length; x++){
-				map[y][x] = existingMap[y][x];
+				map[y][x] = Tile.sand;
 			}
 		}
 		
-		tileSheet = LoadTileSheet("tileSheet.jpg");
-		
+		//tileSheet = LoadTileSheet("resources/tileSheet.jpg");		
 	}
 	
 	public void DrawMap(Graphics g, double xOffset, double yOffset){
@@ -27,29 +25,22 @@ public class TileMap {
 		for(int y = 0; y < map.length; y++){
 			for(int x = 0; x < map[0].length; x++){
 				
-				//BufferedImage img = <get the tile img>;
-				
-				int index = map[y][x];
-				int yIndex = 0;
-				
-				if(index > (tileSheet.getWidth() / Game.TILE_SIZE) - 1){
-					yIndex ++;
-					index = index - (tileSheet.getWidth() / Game.TILE_SIZE);
-				}
+				BufferedImage img = map[y][x].getImage();
 						
 				//convert world us to pixel Game.UNIT;s
 				int xPos = (int)((x + xOffset) * Game.UNIT);
 				int yPos = (int)((y + yOffset) * Game.UNIT);
 				
-				g.drawImage(tileSheet, 
+				//TODO use different drawImage that doesn't need last 4 params
+				g.drawImage(img, 
 						xPos, 
 						yPos, 
 						xPos + Game.UNIT, 
 						yPos + Game.UNIT,
-						index * Game.TILE_SIZE,
-						yIndex * Game.TILE_SIZE,
-						(index * Game.TILE_SIZE) + Game.TILE_SIZE,
-						(yIndex * Game.TILE_SIZE) + Game.TILE_SIZE,
+						0,
+						0,
+						Game.TILE_SIZE,
+						Game.TILE_SIZE,
 						null);
 				
 			}
