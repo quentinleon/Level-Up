@@ -14,29 +14,29 @@ public class TileMap {
 		}
 	}
 	
-	public void DrawMap(Graphics g, double xOffset, double yOffset){
-				
+	public void DrawMap(Graphics g, double xOffset, double yOffset, int width, int height){
+		
 		for(int y = 0; y < map.length; y++){
 			for(int x = 0; x < map[0].length; x++){
-				
-				BufferedImage img = map[y][x].getImage();
-						
-				//convert world us to pixel Game.UNIT;s
-				int xPos = (int)((x + xOffset) * Game.UNIT);
-				int yPos = (int)((y + yOffset) * Game.UNIT);
-				
-				//TODO use different drawImage that doesn't need last 4 params
-				g.drawImage(img, 
-						xPos, 
-						yPos, 
-						xPos + Game.UNIT, 
-						yPos + Game.UNIT,
-						0,
-						0,
-						img.getWidth(),
-						img.getHeight(),
-						null);
-				
+				if(x > xOffset - 2 && y > yOffset - 2 && x < width && y < height){ //only draw what's on screen
+					BufferedImage img = map[y][x].getImage();
+							
+					//convert world us to pixel Game.UNIT;s
+					int xPos = (int)((x - xOffset) * Game.UNIT);
+					int yPos = (int)((y - yOffset) * Game.UNIT);
+					
+					//TODO use different drawImage that doesn't need last 4 params
+					g.drawImage(img, 
+							xPos, 
+							yPos, 
+							xPos + Game.UNIT, 
+							yPos + Game.UNIT,
+							0,
+							0,
+							img.getWidth(),
+							img.getHeight(),
+							null);
+				}
 			}
 		}
 	}

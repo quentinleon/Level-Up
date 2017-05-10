@@ -1,4 +1,5 @@
 import java.awt.Graphics;
+import java.awt.Color;
 
 import javax.swing.JPanel;
 
@@ -7,7 +8,7 @@ public class Game extends JPanel implements Runnable {
 	private static final long serialVersionUID = 1L;
 	
 	public static final int TILE_SIZE = 16; //the pixel size of each tile image
-	public static final double TILE_SCALE = 4; //the factor to multiply the size with
+	public static final double TILE_SCALE = 3; //the factor to multiply the size with
 	public static final int UNIT = (int)(TILE_SIZE * TILE_SCALE); //Factor to multiply world coordinates into screenspace pixel coordinates
 
 	public double deltaTime;
@@ -15,7 +16,7 @@ public class Game extends JPanel implements Runnable {
 	public InputHandler input;
 	
 	public Game () {
-		map = new TileMap(20,20);
+		map = new TileMap(200,200);
 		
 		new Thread(this).start();
 	}
@@ -38,7 +39,7 @@ public class Game extends JPanel implements Runnable {
 	long lastTime = System.currentTimeMillis();
 	public void update(){
 		long nowTime = System.currentTimeMillis();
-		deltaTime = (lastTime - nowTime) / 1000D;
+		deltaTime = (nowTime - lastTime) / 1000D;
 		lastTime = nowTime;
 		
 		if(input.up.isPressed()){
@@ -59,6 +60,8 @@ public class Game extends JPanel implements Runnable {
 	@Override 
 	public void paintComponent(Graphics g){
 		super.paintComponent(g);
-		map.DrawMap(g, xPos, yPos);
+		g.setColor(Color.BLACK);
+		g.fillRect(0, 0, getWidth(), getHeight());
+		map.DrawMap(g, xPos, yPos, (int)(xPos + (getWidth()/UNIT))+2, (int)(yPos + (getHeight()/UNIT))+2);
 	}
 }
