@@ -16,7 +16,7 @@ public class Game extends JPanel implements Runnable {
 	public InputHandler input;
 	
 	public Game () {
-		map = new TileMap(200,200);
+		map = new TileMap(100,100);
 		
 		new Thread(this).start();
 	}
@@ -62,6 +62,6 @@ public class Game extends JPanel implements Runnable {
 		super.paintComponent(g);
 		g.setColor(Color.BLACK);
 		g.fillRect(0, 0, getWidth(), getHeight());
-		map.DrawMap(g, xPos, yPos, (int)(xPos + (getWidth()/UNIT))+2, (int)(yPos + (getHeight()/UNIT))+2);
+		map.DrawMap(g, xPos, yPos, (int)(xPos + (getWidth()/UNIT)), (int)(yPos + (getHeight()/UNIT)));
 	}
 }
