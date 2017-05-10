@@ -6,8 +6,8 @@ public class Game extends JPanel implements Runnable {
 
 	private static final long serialVersionUID = 1L;
 	
-	public static final int TILE_SIZE = 64; //the pixel size of each tile image
-	public static final double TILE_SCALE = 2; //the factor to multiply the size with
+	public static final int TILE_SIZE = 16; //the pixel size of each tile image
+	public static final double TILE_SCALE = 4; //the factor to multiply the size with
 	public static final int UNIT = (int)(TILE_SIZE * TILE_SCALE); //Factor to multiply world coordinates into screenspace pixel coordinates
 
 	public double deltaTime;

@@ -1,9 +1,5 @@
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-
-import javax.imageio.ImageIO;
 
 public class TileMap {
 	private Tile[][] map;
@@ -13,11 +9,9 @@ public class TileMap {
 		
 		for(int y = 0; y < map.length; y++){
 			for(int x = 0; x < map[0].length; x++){
-				map[y][x] = Tile.sand;
+				map[y][x] = new Tile(TileType.getRandomTile());
 			}
 		}
-		
-		//tileSheet = LoadTileSheet("resources/tileSheet.jpg");		
 	}
 	
 	public void DrawMap(Graphics g, double xOffset, double yOffset){
@@ -39,24 +33,11 @@ public class TileMap {
 						yPos + Game.UNIT,
 						0,
 						0,
-						Game.TILE_SIZE,
-						Game.TILE_SIZE,
+						img.getWidth(),
+						img.getHeight(),
 						null);
 				
 			}
 		}
 	}
-	
-	public BufferedImage LoadTileSheet(String fileName){
-		BufferedImage img = null;
-		
-		try{
-			img = ImageIO.read(new File(fileName));
-		} catch(IOException e){
-			System.out.println("Could not load TileSheet!");
-		}
-		
-		return img;
-	}
-	
 }
