@@ -8,7 +8,7 @@ import java.util.Random;
 
 public enum TileType {
 	
-	water("water", false),
+	//water("water", false),
 	stone("stone", true),
 	grass("grass", true),
 	sand("sand", true),

@@ -11,20 +11,21 @@ public class TileMap {
 		for(int y = 0; y < map[0].length; y++){
 			for(int x = 0; x < map.length; x++){
 				if(y == 3 || y == 4){
-					map[x][y] = new Tile(TileType.stoneWall, .7);
+					if(x == 5 && y == 4){
+						map[x][y] = new Tile(TileType.stone, 3.3);
+					} else {
+						map[x][y] = new Tile(TileType.stoneWall, .7);
+					}
 				} else {
 					double height = 0;
 					TileType type = TileType.getRandomTile();
-					if(type == TileType.water){
-						height = -.1;
-					}
 					map[x][y] = new Tile(type,height);
 				}
 			}
 		}
 	}
 	
-	int margin = 2;
+	private int margin = 3;
 	public void DrawMap(Graphics g, double xOffset, double yOffset, int windowWidth, int windowHeight){
 		
 		for(int y = 0; y < map[0].length; y++){
@@ -40,13 +41,14 @@ public class TileMap {
 					//TODO use different drawImage that doesn't need last 4 params
 					
 					if(height > 0){
-						g.setColor(new Color(50,50,50));
+						g.setColor(new Color(200,200,200));
 						g.fillRect(xPos, (yPos + Game.UNIT) - height, Game.UNIT, height);
 					}
+					
+					//don't use negative since it draws on tile above it
 					if(height < 0){
-						int h = Math.abs(height);
 						g.setColor(new Color(50,50,50));
-						g.fillRect(xPos, yPos, Game.UNIT, h);
+						g.fillRect(xPos, yPos, Game.UNIT, Math.abs(height));
 					}
 					
 					g.drawImage(img, 
