@@ -16,14 +16,14 @@ public class Game extends JPanel implements Runnable {
 	public InputHandler input;
 	
 	public Game () {
-		map = new TileMap(200,200);
+		map = new TileMap(100,100);
 		
 		new Thread(this).start();
 	}
 	
 	private double xPos = 0;
 	private double yPos = 0;
-	private double speed = 4;
+	private double speed = 5;
 	
 	public void run(){
 		init();
@@ -60,8 +60,17 @@ public class Game extends JPanel implements Runnable {
 	@Override 
 	public void paintComponent(Graphics g){
 		super.paintComponent(g);
-		g.setColor(Color.BLACK);
+		g.setColor(new Color(100,100,100));
+		
 		g.fillRect(0, 0, getWidth(), getHeight());
-		map.DrawMap(g, xPos, yPos, (int)(xPos + (getWidth()/UNIT))+2, (int)(yPos + (getHeight()/UNIT))+2);
+		int drawWidth = (int)(xPos + (getWidth()/UNIT) + 2);
+		int drawHeight = (int)(yPos + (getHeight()/UNIT) + 2);
+		
+		map.drawMap(g, xPos, yPos, drawWidth, drawHeight);
+		//draw mobs
+		//draw objects
+		map.drawShadows(g, xPos, yPos, drawWidth, drawHeight);
+		map.drawWalls(g, xPos, yPos, drawWidth, drawHeight);
+		//draw lights?
 	}
 }

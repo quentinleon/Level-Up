@@ -12,7 +12,9 @@ public enum TileType {
 	stone("stone", true),
 	grass("grass", true),
 	sand("sand", true),
-	gravel("gravel", true);
+	gravel("gravel", true),
+	stoneWall("stoneWall", false), //TODO change to not wall
+	none(null, false);
 	
 	//private final String name;
 	private final boolean traversable;
@@ -38,7 +40,7 @@ public enum TileType {
 	}
 	
 	private static final TileType[] VALUES = values();
-	private static final int SIZE = VALUES.length;
+	private static final int SIZE = VALUES.length - 1;
 	private static final Random RANDOM = new Random();
 	
 	public static TileType getRandomTile(){
