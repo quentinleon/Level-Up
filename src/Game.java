@@ -11,19 +11,14 @@ public class Game extends JPanel implements Runnable {
 	public static final double TILE_SCALE = 3; //the factor to multiply the size with
 	public static final int UNIT = (int)(TILE_SIZE * TILE_SCALE); //Factor to multiply world coordinates into screenspace pixel coordinates
 
-	public double deltaTime;
 	public TileMap map;
-	public InputHandler input;
+	public Player player;
 	
 	public Game () {
 		map = new TileMap(100,100);
 		
 		new Thread(this).start();
 	}
-	
-	private double xPos = 0;
-	private double yPos = 0;
-	private double speed = 5;
 	
 	public void run(){
 		init();
@@ -33,27 +28,22 @@ public class Game extends JPanel implements Runnable {
 	}
 	
 	public void init() {
-		input = new InputHandler(this);
+		player = new Player(this);
 	}
 	
 	long lastTime = System.currentTimeMillis();
+	double counter = 0;
+	
 	public void update(){
 		long nowTime = System.currentTimeMillis();
-		deltaTime = (nowTime - lastTime) / 1000D;
+		counter += (nowTime - lastTime);
 		lastTime = nowTime;
 		
-		if(input.up.isPressed()){
-			yPos -= speed * deltaTime;
+		if(counter >= 1000/60){
+			counter = 0;
+			player.update();
 		}
-		if(input.down.isPressed()){
-			yPos += speed * deltaTime;	
-		}
-		if(input.left.isPressed()){
-			xPos -= speed * deltaTime;
-		}
-		if(input.right.isPressed()){
-			xPos += speed * deltaTime;
-		}
+		
 		repaint();
 	}
 	
@@ -63,14 +53,14 @@ public class Game extends JPanel implements Runnable {
 		g.setColor(new Color(100,100,100));
 		
 		g.fillRect(0, 0, getWidth(), getHeight());
-		int drawWidth = (int)(xPos + (getWidth()/UNIT) + 2);
-		int drawHeight = (int)(yPos + (getHeight()/UNIT) + 2);
+		int drawWidth = (int)(player.getX() + (getWidth()/UNIT) + 2);
+		int drawHeight = (int)(player.getY() + (getHeight()/UNIT) + 2);
 		
-		map.drawMap(g, xPos, yPos, drawWidth, drawHeight);
+		map.drawMap(g, player.getX(), player.getY(), drawWidth, drawHeight);
 		//draw mobs
 		//draw objects
-		map.drawShadows(g, xPos, yPos, drawWidth, drawHeight);
-		map.drawWalls(g, xPos, yPos, drawWidth, drawHeight);
+		map.drawShadows(g, player.getX(), player.getY(), drawWidth, drawHeight);
+		map.drawWalls(g, player.getX(), player.getY(), drawWidth, drawHeight);
 		//draw lights?
 	}
 }
