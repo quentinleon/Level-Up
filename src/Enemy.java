@@ -1,3 +1,4 @@
+import java.awt.Graphics;
 
 public class Enemy implements Mob{
 
@@ -19,6 +20,12 @@ public class Enemy implements Mob{
 	public double getY() {
 		// TODO Auto-generated method stub
 		return 0;
+	}
+
+	@Override
+	public void draw(Graphics g) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }
