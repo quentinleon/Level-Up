@@ -60,7 +60,7 @@ public class Game extends JPanel implements Runnable {
 	@Override 
 	public void paintComponent(Graphics g){
 		super.paintComponent(g);
-		g.setColor(Color.BLACK);
+		g.setColor(new Color(100,100,100));
 		
 		g.fillRect(0, 0, getWidth(), getHeight());
 		int drawWidth = (int)(xPos + (getWidth()/UNIT) + 2);

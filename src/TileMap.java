@@ -15,8 +15,8 @@ public class TileMap {
 		
 		for(int y = 0; y < map[0].length; y++){
 			for(int x = 0; x < map.length; x++){
-				if(y == 15 && x % 4 == 2){
-						map[x][y] = new Tile(TileType.stone, wallHeight);
+				if(y == 8 && x % 4 == 2){
+						map[x][y] = new Tile(TileType.stone, x/8.0 + .3);
 				} else {
 					double height = 0;
 					TileType type = TileType.sand;
@@ -24,6 +24,10 @@ public class TileMap {
 				}
 			}
 		}
+	}
+	
+	public Tile getTile(int x, int y){
+		return map[x][y];
 	}
 	
 	public void drawMap(Graphics g, double xOffset, double yOffset, int windowWidth, int windowHeight){
@@ -80,7 +84,7 @@ public class TileMap {
 					int xPos = (int)((x - xOffset) * Game.UNIT);
 					int yPos = (int)((y - yOffset) * Game.UNIT);
 					
-					//TODO make polygons based on variables, not constants
+					//TODO make polygons based on variables, not constants.
 					
 					//draw topShadow
 					if((y - 1) >= yRange[0] && map[x][y-1].getHeight() == 0){

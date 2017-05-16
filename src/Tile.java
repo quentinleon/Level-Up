@@ -26,6 +26,10 @@ public class Tile {
 		this.type = type;
 	}
 	
+	public void addHeight(double added){
+		height += added;
+	}
+	
 	public void setHeight(double height){
 		this.height = height;
 	}
