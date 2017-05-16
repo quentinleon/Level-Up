@@ -13,6 +13,7 @@ public class Game extends JPanel implements Runnable {
 
 	public TileMap map;
 	public Player player;
+	public Camera camera;
 	
 	public Game () {
 		map = new TileMap(100,100);
@@ -29,6 +30,7 @@ public class Game extends JPanel implements Runnable {
 	
 	public void init() {
 		player = new Player(this);
+		camera = new Camera(player);
 	}
 	
 	long lastTime = System.currentTimeMillis();
@@ -42,6 +44,7 @@ public class Game extends JPanel implements Runnable {
 		if(counter >= 1000/60){
 			counter = 0;
 			player.update();
+			camera.update();
 		}
 		
 		repaint();
@@ -53,14 +56,15 @@ public class Game extends JPanel implements Runnable {
 		g.setColor(new Color(100,100,100));
 		
 		g.fillRect(0, 0, getWidth(), getHeight());
-		int drawWidth = (int)(player.getX() + (getWidth()/UNIT) + 2);
-		int drawHeight = (int)(player.getY() + (getHeight()/UNIT) + 2);
+		int drawWidth = (int)(camera.getX() + (getWidth()/UNIT) + 2);
+		int drawHeight = (int)(camera.getY() + (getHeight()/UNIT) + 2);
 		
-		map.drawMap(g, player.getX(), player.getY(), drawWidth, drawHeight);
+		map.drawMap(g, camera.getX(), camera.getY(), drawWidth, drawHeight);
 		//draw mobs
+		player.draw(g);
 		//draw objects
-		map.drawShadows(g, player.getX(), player.getY(), drawWidth, drawHeight);
-		map.drawWalls(g, player.getX(), player.getY(), drawWidth, drawHeight);
+		map.drawShadows(g, camera.getX(), camera.getY(), drawWidth, drawHeight);
+		map.drawWalls(g, camera.getX(), camera.getY(), drawWidth, drawHeight);
 		//draw lights?
 	}
 }
