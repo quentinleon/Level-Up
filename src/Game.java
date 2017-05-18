@@ -33,10 +33,10 @@ public class Game extends JPanel implements Runnable {
 	
 	public void init() {
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-		player = new Player(this, 0, 0);
+		player = new Player(this, 10, 5);
 		camera = new Camera(player);
-		camera.setXOffset((screenSize.getWidth()/2) / Game.UNIT);
-		camera.setYOffset((screenSize.getHeight()/2) / Game.UNIT);
+		camera.setXOffset((screenSize.getWidth()/2) / (Game.UNIT) - (.5));
+		camera.setYOffset((screenSize.getHeight()/2) / Game.UNIT - (.5));
 	}
 	
 	long lastTime = System.currentTimeMillis();
