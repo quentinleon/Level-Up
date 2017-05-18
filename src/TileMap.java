@@ -53,7 +53,7 @@ public class TileMap {
 						int xPos = (int)((x - xOffset) * Game.UNIT);
 						int yPos = (int)((y - yOffset) * Game.UNIT);
 						//draw it at the correct position
-						g.drawImage(img, xPos, yPos, xPos + Game.UNIT, yPos + Game.UNIT,
+						g.drawImage(img, xPos, yPos, xPos + Game.UNIT + 1, yPos + Game.UNIT + 1,
 								0, 0, img.getWidth(null), img.getHeight(null), null);
 					}
 				}
