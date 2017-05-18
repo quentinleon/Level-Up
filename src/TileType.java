@@ -16,12 +16,13 @@ public enum TileType {
 	stoneWall("stoneWall", false), //TODO change to not wall
 	none(null, false);
 	
-	//private final String name;
+	private final String name;
 	private final boolean traversable;
 	private BufferedImage img;
 	
 	TileType(String name, boolean traversable){
 		this.traversable = traversable;
+		this.name = name;
 		
 		img = null;
 		try{
@@ -45,5 +46,13 @@ public enum TileType {
 	
 	public static TileType getRandomTile(){
 		return VALUES[RANDOM.nextInt(SIZE)];
+	}
+	
+	public String getName(){
+		return name;
+	}
+	
+	public String toString(){
+		return getName();
 	}
 }

@@ -20,7 +20,6 @@ public class Game extends JPanel implements Runnable {
 	
 	public Game () {
 		map = new TileMap(100,100);
-		
 		new Thread(this).start();
 	}
 	
@@ -37,6 +36,8 @@ public class Game extends JPanel implements Runnable {
 		camera = new Camera(player);
 		camera.setXOffset((screenSize.getWidth()/2) / (Game.UNIT) - (.5));
 		camera.setYOffset((screenSize.getHeight()/2) / Game.UNIT - (.5));
+		
+		MapSaver.save("saves/save.lul", this);
 	}
 	
 	long lastTime = System.currentTimeMillis();
