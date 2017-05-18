@@ -1,15 +1,7 @@
-import java.awt.Graphics;
-import java.awt.Color;
 import java.awt.Toolkit;
 import java.awt.Dimension;
 
-import javax.swing.JPanel;
-
-
-public class Game extends JPanel implements Runnable {
-
-	private static final long serialVersionUID = 1L;
-	
+public class Game implements Runnable {	
 	public static final int TILE_SIZE = 16; //the pixel size of each tile image
 	public static final double TILE_SCALE = 5; //the factor to multiply the size with
 	public static final int UNIT = (int)(TILE_SIZE * TILE_SCALE); //Factor to multiply world coordinates into screenspace pixel coordinates
@@ -17,9 +9,17 @@ public class Game extends JPanel implements Runnable {
 	public TileMap map;
 	public Player player;
 	public Camera camera;
+	public Renderer renderer;
 	
 	public Game () {
 		map = new TileMap(100,100);
+		renderer = new Renderer(this);
+		
+		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+		player = new Player(this, 10, 5);
+		camera = new Camera(player);
+		camera.setXOffset((screenSize.getWidth()/2) / (Game.UNIT) - (.5));
+		camera.setYOffset((screenSize.getHeight()/2) / Game.UNIT - (.5));
 		
 		new Thread(this).start();
 	}
@@ -32,11 +32,7 @@ public class Game extends JPanel implements Runnable {
 	}
 	
 	public void init() {
-		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-		player = new Player(this, 10, 5);
-		camera = new Camera(player);
-		camera.setXOffset((screenSize.getWidth()/2) / (Game.UNIT) - (.5));
-		camera.setYOffset((screenSize.getHeight()/2) / Game.UNIT - (.5));
+
 	}
 	
 	long lastTime = System.currentTimeMillis();
@@ -53,24 +49,6 @@ public class Game extends JPanel implements Runnable {
 			camera.update();
 		}
 		
-		repaint();
-	}
-	
-	@Override 
-	public void paintComponent(Graphics g){
-		super.paintComponent(g);
-		g.setColor(new Color(100,100,100));
-		
-		g.fillRect(0, 0, getWidth(), getHeight());
-		int drawWidth = (int)(camera.getX() + (getWidth()/UNIT) + 2);
-		int drawHeight = (int)(camera.getY() + (getHeight()/UNIT) + 2);
-		
-		map.drawMap(g, camera.getX(), camera.getY(), drawWidth, drawHeight);
-		//draw mobs
-		player.draw(g, camera);
-		//draw objects
-		map.drawShadows(g, camera.getX(), camera.getY(), drawWidth, drawHeight);
-		map.drawWalls(g, camera.getX(), camera.getY(), drawWidth, drawHeight);
-		//draw lights?
+		renderer.repaint();
 	}
 }
