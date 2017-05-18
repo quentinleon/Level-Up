@@ -23,7 +23,7 @@ public class Enemy implements Mob{
 	}
 
 	@Override
-	public void draw(Graphics g) {
+	public void draw(Graphics g, Camera cam) {
 		// TODO Auto-generated method stub
 		
 	}
