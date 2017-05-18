@@ -16,8 +16,8 @@ public class Camera {
 	}
 	
 	public void update(){
-		xPos = target.getX() + xOffset;
-		yPos = target.getY() + yOffset;
+		xPos = target.getX() - xOffset;
+		yPos = target.getY() - yOffset;
 	}
 	
 	public double getX() {
@@ -29,6 +29,14 @@ public class Camera {
 	}
 	
 	public void setTarget(Mob target){
-		
+		this.target = target;
+	}
+	
+	public void setXOffset(double xOffset) {
+		this.xOffset = xOffset;
+	}	
+	
+	public void setYOffset(double yOffset) {
+		this.yOffset = yOffset;
 	}
 }

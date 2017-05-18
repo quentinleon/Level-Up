@@ -15,6 +15,12 @@ public class Player implements Mob {
 	private double speed = 5;
 	
 	BufferedImage right;
+
+	public Player(Game g, int x, int y){
+		this(g);
+		xPos = x;
+		yPos = y;
+	}
 	
 	public Player(Game game){
 		input = new InputHandler(game);
@@ -48,22 +54,21 @@ public class Player implements Mob {
 
 	@Override
 	public double getX() {
-		// TODO Auto-generated method stub
 		return xPos;
 	}
 
 	@Override
 	public double getY() {
-		// TODO Auto-generated method stub
 		return yPos;
 	}
 
-	public void draw(Graphics g) {
+	public void draw(Graphics g, Camera cam) {
 		if(right != null){
-			int drawPosX = (int)((0) * Game.UNIT);
-			int drawPosY = (int)((0) * Game.UNIT);
+			int drawPosX = (int)((xPos - cam.getX()) * Game.UNIT);
+			int drawPosY = (int)((yPos - cam.getY()) * Game.UNIT);
 			g.drawImage(right, drawPosX, drawPosY, drawPosX + Game.UNIT, drawPosY + Game.UNIT,
 					0, 0, right.getHeight(null), right.getHeight(null), null);
+			
 		}
 	}
 
