@@ -95,6 +95,10 @@ public class Renderer extends JPanel {
 			}
 		}
 		
+		for(Mob mob : game.enemies){
+			mob.draw(g, game.camera);
+		}
+		
 		//draw walls and mobs?
 		for(int y = yRange[0]; y < yRange[1]; y++){
 			for(int x = xRange[0]; x < xRange[1]; x++){
