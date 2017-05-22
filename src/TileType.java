@@ -55,4 +55,13 @@ public enum TileType {
 	public String toString(){
 		return getName();
 	}
+	
+	public static TileType fromString(String s){
+		for(TileType t: TileType.values()){
+			if(t.name().equals(s)){
+				return t;
+			}
+		}
+		return null;
+	}
 }

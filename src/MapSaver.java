@@ -20,6 +20,8 @@ public class MapSaver {
 			str = "p(" + player.getX() + "," + player.getY() + ")" + nl;
 			writer.write(str + nl);
 			
+			//TODO save mobs
+			
 			for(int y = 0; y < map.height; y++){
 				for(int x = 0; x < map.width; x++){
 					Tile t = map.getTile(x, y);
