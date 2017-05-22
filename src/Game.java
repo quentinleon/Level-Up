@@ -25,14 +25,9 @@ public class Game implements Runnable {
 	}
 	
 	public void run(){
-		init();
-		while(true){ //TODO run at regular increments (60 fps), or as fast as possible (normalize with delta time)
+		while(true){
 			update();
 		}
-	}
-	
-	public void init() {
-
 	}
 	
 	long lastTime = System.currentTimeMillis();
