@@ -1,4 +1,5 @@
 import java.awt.Toolkit;
+import java.util.ArrayList;
 import java.awt.Dimension;
 
 public class Game implements Runnable {	
@@ -8,6 +9,7 @@ public class Game implements Runnable {
 
 	public TileMap map;
 	public Player player;
+	public ArrayList<Mob> enemies;
 	public Camera camera;
 	public Renderer renderer;
 	
@@ -20,6 +22,12 @@ public class Game implements Runnable {
 		camera = new Camera(player);
 		camera.setXOffset((screenSize.getWidth()/2) / (Game.UNIT) - (.5));
 		camera.setYOffset((screenSize.getHeight()/2) / Game.UNIT - (.5));
+		
+		enemies = new ArrayList<Mob>();
+		Enemy e1 = new Enemy(player, "fireMonster", 1, 1, 3);
+		Enemy e2 = new Enemy(player, "piskel", 1, 1, 4);
+		enemies.add(e1);
+		//enemies.add(e2);
 		
 		new Thread(this).start();
 	}
@@ -42,6 +50,9 @@ public class Game implements Runnable {
 			counter = 0;
 			player.update();
 			camera.update();
+			for(Mob mob : enemies){
+				mob.update();
+			}
 		}
 		
 		renderer.repaint();

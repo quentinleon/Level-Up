@@ -16,10 +16,13 @@ public class Enemy implements Mob{
 	private double playerX;
 	private double playerY;
 	
+	private int animFrame = 0;
+	private int FPS = 5;
+	
 	BufferedImage img;
 	
 	
-	public Enemy(Mob player, int healthNumber, int damageNumber, int speedNumber){
+	public Enemy(Mob player, String name, int healthNumber, int damageNumber, int speedNumber){
 		health = healthNumber;
 		target = player;
 		damage = damageNumber;
@@ -29,39 +32,54 @@ public class Enemy implements Mob{
 		
 		img = null;
 		try{
-			img = ImageIO.read(new File("resources/mobs/enemy/Fire Mob.png"));
+			img = ImageIO.read(new File("resources/mobs/enemy/" + name + ".png"));
 		} catch(IOException e){
-			System.out.println("Could not load all player sprites!");
+			System.out.println("Could not enemy sprite!");
 		}
+		
+		xPos = 1;
+		yPos = 1;
 	}
 
 	public void init() {
-		xPos = Math.random() * 51;
-		yPos = Math.random() * 51;
+		xPos = 1;
+		yPos = 1;
 	}
 
+	private int counter = 0;
 	public void update() {
 		
-		double testX = target.getX();
-		double testY = target.getY();
+		playerX = target.getX();
+		playerY = target.getY();
 		
-		if ((testX != playerX || testY != playerY) && close() == true){
+		counter ++;
+		if(counter > 60/FPS){
+			counter = 0;
+			animFrame ++;
+			if(animFrame >= (img.getWidth() / img.getHeight(null))){
+				animFrame = 0;
+			}
+		}
+		
+		if (close() == true){
 			
-			if (testX > xPos){
-				xPos += speed / 60;
+			if (playerX > xPos){
+				xPos += speed / 60.0;
 			}
-			else if (testX < xPos){
-				xPos -= speed / 60;
-			}
-			
-			if (testY > yPos){
-				yPos += speed / 60;
-			}
-			else if (testY < xPos){
-				yPos -= speed / 60;
+			else if (playerX < xPos){
+				xPos -= speed / 60.0;
 			}
 			
+			if (playerY > yPos){
+				yPos += speed / 60.0;
 			}
+			else if (playerY < xPos){
+				yPos -= speed / 60.0;
+			}
+			
+			} 
+		
+		
 		}
 		
 
@@ -92,7 +110,8 @@ public class Enemy implements Mob{
 			int drawPosX = (int)((xPos - cam.getX()) * Game.UNIT);
 			int drawPosY = (int)((yPos - cam.getY()) * Game.UNIT);
 			g.drawImage(img, drawPosX, drawPosY, drawPosX + Game.UNIT, drawPosY + Game.UNIT,
-					0, 0, img.getHeight(null), img.getHeight(null), null);
+					img.getHeight(null) * animFrame, 0,
+					img.getHeight(null) * (animFrame + 1), img.getHeight(null), null);
 		}
 		
 	}
