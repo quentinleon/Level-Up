@@ -16,9 +16,11 @@ public class Renderer extends JPanel {
 	
 	private double wallHeight = 1.7;
 	
-	public Renderer(Game game){
+	public Renderer(Game game, InputHandler keyListener){
 		this.game = game;
 		map = game.map.getMap();
+		addKeyListener(keyListener);
+		setFocusable(true);
 	}
 	
 	public void paintComponent(Graphics g){

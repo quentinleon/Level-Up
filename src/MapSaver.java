@@ -10,7 +10,7 @@ public class MapSaver {
 		BufferedWriter writer = null;
 		
 		try{
-			File file = new File(path);
+			File file = new File("saves/" + path);
 			writer = new BufferedWriter(new FileWriter(file));
 			String str;
 			

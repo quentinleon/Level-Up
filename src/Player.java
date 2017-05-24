@@ -59,14 +59,14 @@ public class Player implements Mob {
 	private int FPS = 5;
 	private int counter = 0;
 	
-	public Player(Game g, int x, int y){
+	public Player(Game g, double x, double y){
 		this(g);
 		xPos = x;
 		yPos = y;
 	}
 	
 	public Player(Game game){
-		input = new InputHandler(game);
+		input = new InputHandler();
 		
 		img = walk_r.getImage();
 		//TODO set img based on movement state

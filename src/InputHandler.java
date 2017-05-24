@@ -2,10 +2,9 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
 public class InputHandler implements KeyListener {
-
-	public InputHandler(Game game){
-		game.renderer.addKeyListener(this);
-		game.renderer.setFocusable(true);
+	
+	public InputHandler getKeyListener(){
+		return this;
 	}
 	
 	public class Key{
@@ -50,6 +49,9 @@ public class InputHandler implements KeyListener {
 		}
 		if(keyCode == KeyEvent.VK_D || keyCode == KeyEvent.VK_RIGHT) {
 			right.toggle(isPressed);
+		}
+		if(keyCode == KeyEvent.VK_H) {
+			MapSaver.save("save2.lul", Game.G);
 		}
 	}
 }

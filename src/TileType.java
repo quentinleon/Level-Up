@@ -62,6 +62,6 @@ public enum TileType {
 				return t;
 			}
 		}
-		return null;
+		return none;
 	}
 }
