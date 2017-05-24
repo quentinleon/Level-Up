@@ -4,8 +4,8 @@ import java.awt.event.KeyListener;
 public class InputHandler implements KeyListener {
 
 	public InputHandler(Game game){
-		game.addKeyListener(this);
-		game.setFocusable(true);
+		game.renderer.addKeyListener(this);
+		game.renderer.setFocusable(true);
 	}
 	
 	public class Key{

@@ -1,55 +1,42 @@
 import java.awt.Color;
-import java.awt.Polygon;
 import java.awt.Graphics;
+import java.awt.Polygon;
 import java.awt.image.BufferedImage;
 
-public class TileMap {
-	int width;
-	int height;
-	private Tile[][] map;
+import javax.swing.JPanel;
+
+public class Renderer extends JPanel {
+	private static final long serialVersionUID = 1L;
+
+	private Tile[][] map;	
+	private Game game;
+	
 	private Color shadow = new Color(0,0,0,120);
-	private Color tempWallColor = new Color(150,150,150);
+	private Color tempWallColor = new Color(150,150,150); //TODO replace with wall texture :D
 	
 	private double wallHeight = 1.7;
 	
-	public TileMap(int cols, int rows){
-		map = new Tile[cols][rows];
-		width = cols;
-		height = rows;
+	public Renderer(Game game){
+		this.game = game;
+		map = game.map.getMap();
 	}
 	
-	public void makeTestMap(){
-		for(int y = 0; y < map[0].length; y++){
-			for(int x = 0; x < map.length; x++){
-				if(y == 8 && x % 4 == 2){
-						map[x][y] = new Tile(TileType.stone, x/8.0 + .3);
-				} else {
-					double height = 0;
-					TileType type = TileType.sand;
-					map[x][y] = new Tile(type,height);
-				}
-			}
-		}
-	}
-	
-	public Tile getTile(int x, int y){
-		return map[x][y];
-	}
-	
-	public int[] getSize(){
-		int[] size = {map.length, map[0].length};
-		return size;
-  }
-  
-  public Tile[][] getMap(){
-		return map;
-	}
-	
-	public void drawMap(Graphics g, double xOffset, double yOffset, int windowWidth, int windowHeight){
-		//compute what part of the map needs to be rendered
-		int[] xRange = {(int)xOffset, windowWidth};
-		int[] yRange = {(int)yOffset, windowHeight};
+	public void paintComponent(Graphics g){
+		super.paintComponent(g);
+		g.setColor(new Color(100,100,100));
 		
+		g.fillRect(0, 0, getWidth(), getHeight());
+		int drawWidth = (int)(game.camera.getX() + (getWidth()/Game.UNIT) + 2);
+		int drawHeight = (int)(game.camera.getY() + (getHeight()/Game.UNIT) + 2);
+		
+		draw(g, game.camera.getX(), game.camera.getY(), drawWidth, drawHeight);
+	}
+	
+	private void draw(Graphics g, double xOffset, double yOffset, int windowWidth, int windowHeight){
+		//compute what part of the map needs to be rendered
+		int[] xRange = {(int)(xOffset - wallHeight), (int)(windowWidth)};
+		int[] yRange = {(int)(yOffset), (int)(windowHeight + (wallHeight * 1.5) + 1)};
+				
 		//don't try to draw what's not there
 		if(xRange[0] < 0){xRange[0] = 0;}
 		if(xRange[1] >= map.length){xRange[1] = map.length;}
@@ -68,25 +55,13 @@ public class TileMap {
 						int xPos = (int)((x - xOffset) * Game.UNIT);
 						int yPos = (int)((y - yOffset) * Game.UNIT);
 						//draw it at the correct position
-						g.drawImage(img, xPos, yPos, xPos + Game.UNIT + 1, yPos + Game.UNIT + 1,
-								0, 0, img.getWidth(null), img.getHeight(null), null);
+							g.drawImage(img, xPos, yPos, xPos + Game.UNIT + 1, yPos + Game.UNIT + 1,
+									0, 0, img.getWidth(null), img.getHeight(null), null);
+						}
 					}
 				}
 			}
-		}
-	}
-	
-	public void drawShadows(Graphics g, double xOffset, double yOffset, int windowWidth, int windowHeight){
-		//compute what part of the map needs to be rendered
-		int[] xRange = {(int)(xOffset - wallHeight), (int)(windowWidth)};
-		int[] yRange = {(int)(yOffset), (int)(windowHeight + (wallHeight * 1.5) + 1)};
-		
-		//don't try to draw what's not there
-		if(xRange[0] < 0){xRange[0] = 0;}
-		if(xRange[1] >= map.length){xRange[1] = map.length;}
-		if(yRange[0] < 0){yRange[0] = 0;}
-		if(yRange[1] >= map[0].length){yRange[1] = map[0].length;}
-		
+			
 		//draw shadows 
 		for(int y = yRange[0]; y < yRange[1]; y++){
 			for(int x = xRange[0]; x < xRange[1]; x++){
@@ -119,21 +94,17 @@ public class TileMap {
 				}
 			}
 		}
-	}
-	
-	public void drawWalls(Graphics g, double xOffset, double yOffset, int windowWidth, int windowHeight){
-		//compute what part of the map needs to be rendered
-		int[] xRange = {(int)(xOffset), (int)(windowWidth)};
-		int[] yRange = {(int)(yOffset), (int)(windowHeight + wallHeight + 1)};
 		
-		//don't try to draw what's not there
-		if(xRange[0] < 0){xRange[0] = 0;}
-		if(xRange[1] >= map.length){xRange[1] = map.length;}
-		if(yRange[0] < 0){yRange[0] = 0;}
-		if(yRange[1] >= map[0].length){yRange[1] = map[0].length;}
+		for(Mob mob : game.enemies){
+			mob.draw(g, game.camera);
+		}
 		
+		//draw walls and mobs?
 		for(int y = yRange[0]; y < yRange[1]; y++){
 			for(int x = xRange[0]; x < xRange[1]; x++){
+				if((int)(game.player.getY()) == y){
+					game.player.draw(g, game.camera);
+				}
 				//set draw color to transparent black
 				g.setColor(tempWallColor);
 				//compute the height for each tile
@@ -151,6 +122,6 @@ public class TileMap {
 					}
 				}
 			}
-		}
+		}	
 	}
 }
