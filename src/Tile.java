@@ -42,8 +42,11 @@ public class Tile {
 		return type.getImage();
 	}
 	
-	public boolean isTraversable(){
-		return traversable;
+	public TileType getType(){
+		return type;
 	}
 	
+	public boolean isTraversable(){
+		return traversable;
+	}	
 }

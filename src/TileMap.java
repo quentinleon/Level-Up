@@ -4,15 +4,21 @@ import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 
 public class TileMap {
+	int width;
+	int height;
 	private Tile[][] map;
 	private Color shadow = new Color(0,0,0,120);
 	private Color tempWallColor = new Color(150,150,150);
 	
 	private double wallHeight = 1.7;
 	
-	public TileMap(int rows, int cols){
-		map = new Tile[rows][cols];
-		
+	public TileMap(int cols, int rows){
+		map = new Tile[cols][rows];
+		width = cols;
+		height = rows;
+	}
+	
+	public void makeTestMap(){
 		for(int y = 0; y < map[0].length; y++){
 			for(int x = 0; x < map.length; x++){
 				if(y == 8 && x % 4 == 2){
@@ -30,7 +36,12 @@ public class TileMap {
 		return map[x][y];
 	}
 	
-	public Tile[][] getMap(){
+	public int[] getSize(){
+		int[] size = {map.length, map[0].length};
+		return size;
+  }
+  
+  public Tile[][] getMap(){
 		return map;
 	}
 	

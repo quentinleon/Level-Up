@@ -29,7 +29,7 @@ public class Game implements Runnable {
 		enemies.add(e1);
 		//enemies.add(e2);
 		
-		new Thread(this).start();
+    new Thread(this).start();
 	}
 	
 	public void run(){
