@@ -11,7 +11,7 @@ public enum TileType {
 	water("water", false),
 	stone("stone", true),
 	grass("grass", true),
-	sand("sand", true),
+	sand( "sand", true),
 	gravel("gravel", true),
 	stoneWall("stoneWall", false), //TODO change to not wall
 	none(null, false);
