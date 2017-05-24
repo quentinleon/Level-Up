@@ -14,8 +14,51 @@ public class Player implements Mob {
 	private double yPos = 0;
 	private double speed = 5;
 	
-	BufferedImage right;
+	//current image displayed
+	BufferedImage img;
+	
+	class Animation {
+		private BufferedImage image;
+		private int fps;
+		
+		public Animation(String path, int fps){
+			this.fps = fps;
+			image = null;
+			try{
+				image = ImageIO.read(new File("resources/mobs/player/" + path + ".png"));
+			} catch(IOException e){
+				System.out.println("Could not load the " + path + " animation!");
+			}
+		}
+		
+		public BufferedImage getImage(){
+			return image;
+		}
+		
+		public int getFPS(){
+			return fps;
+		}
+	}
+	//animation strips
+	private Animation idle_u = new Animation("idle_u", 2);
+	private Animation idle_d = new Animation("idle_d", 2);
+	private Animation idle_l = new Animation("idle_l", 2);
+	private Animation idle_r = new Animation("idle_r", 2);
 
+	private Animation walk_u = new Animation("walk_u", 5);
+	private Animation walk_d = new Animation("walk_d", 5);
+	private Animation walk_l = new Animation("walk_l", 5);
+	private Animation walk_r = new Animation("walk_r", 5);
+	
+	private Animation attack_u = new Animation("attack_u", 5);
+	private Animation attack_d = new Animation("attack_d", 5);
+	private Animation attack_l = new Animation("attack_l", 5);
+	private Animation attack_r = new Animation("attack_r", 5);
+
+	private int animFrame = 0;
+	private int FPS = 5;
+	private int counter = 0;
+	
 	public Player(Game g, int x, int y){
 		this(g);
 		xPos = x;
@@ -25,12 +68,8 @@ public class Player implements Mob {
 	public Player(Game game){
 		input = new InputHandler(game);
 		
-		right = null;
-		try{
-			right = ImageIO.read(new File("resources/mobs/player/right.png"));
-		} catch(IOException e){
-			System.out.println("Could not load all player sprites!");
-		}
+		img = walk_r.getImage();
+		//TODO set img based on movement state
 	}
 	
 	public void init() {
@@ -50,6 +89,15 @@ public class Player implements Mob {
 		if(input.right.isPressed()){
 			xPos += speed / 60;
 		}
+		
+		counter ++;
+		if(counter > 60/FPS){
+			counter = 0;
+			animFrame ++;
+			if(animFrame >= (img.getWidth() / img.getHeight(null))){
+				animFrame = 0;
+			}
+		}
 	}
 
 	@Override
@@ -63,13 +111,13 @@ public class Player implements Mob {
 	}
 
 	public void draw(Graphics g, Camera cam) {
-		if(right != null){
+		if(img != null){
 			int drawPosX = (int)((xPos - cam.getX()) * Game.UNIT);
 			int drawPosY = (int)((yPos - cam.getY()) * Game.UNIT);
-			g.drawImage(right, drawPosX, drawPosY, drawPosX + Game.UNIT, drawPosY + Game.UNIT,
-					0, 0, right.getHeight(null), right.getHeight(null), null);
+			g.drawImage(img, drawPosX, drawPosY, drawPosX + Game.UNIT, drawPosY + Game.UNIT,
+					img.getHeight(null) * animFrame, 0,
+					img.getHeight(null) * (animFrame + 1), img.getHeight(null), null);
 			
 		}
 	}
-
 }
