@@ -12,16 +12,23 @@ public class MapSaver {
 		try{
 			File file = new File(path);
 			writer = new BufferedWriter(new FileWriter(file));
+			String str;
 			
 			TileMap map = game.map;
 			Player player = game.player;
+
+			//save map size
+			int[] mapSize = map.getSize();
+			str = "(" + mapSize[0] + "," + mapSize[1] + ")" + nl;
+			writer.write(str + nl);
 			
-			String str;
+			//save the player
 			str = "p(" + player.getX() + "," + player.getY() + ")" + nl;
 			writer.write(str + nl);
 			
 			//TODO save mobs
 			
+			//save the tiles
 			for(int y = 0; y < map.height; y++){
 				for(int x = 0; x < map.width; x++){
 					Tile t = map.getTile(x, y);

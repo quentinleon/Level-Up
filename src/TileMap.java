@@ -16,7 +16,9 @@ public class TileMap {
 		map = new Tile[cols][rows];
 		width = cols;
 		height = rows;
-		
+	}
+	
+	public void makeTestMap(){
 		for(int y = 0; y < map[0].length; y++){
 			for(int x = 0; x < map.length; x++){
 				if(y == 8 && x % 4 == 2){
@@ -32,6 +34,11 @@ public class TileMap {
 	
 	public Tile getTile(int x, int y){
 		return map[x][y];
+	}
+	
+	public int[] getSize(){
+		int[] size = {map.length, map[0].length};
+		return size;
 	}
 	
 	public void drawMap(Graphics g, double xOffset, double yOffset, int windowWidth, int windowHeight){

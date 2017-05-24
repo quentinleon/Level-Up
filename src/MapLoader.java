@@ -19,6 +19,7 @@ public class MapLoader {
 	public void readMap(){
 		try{
 			fileInput = new Scanner(new File(" "));
+			String headerLine = fileInput.nextLine();
 			while(fileInput.hasNext()){
 				String line = fileInput.nextLine();
 				process(line);
