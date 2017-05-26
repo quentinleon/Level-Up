@@ -21,8 +21,10 @@ public class Player implements Mob {
 	
 	public int direction;
 	
-	public int health;
-	public int damage;
+	public int health = 20;
+	public int damage = 2;
+	
+	public boolean dead;
 	
 	//current image displayed
 	BufferedImage img;
@@ -73,6 +75,7 @@ public class Player implements Mob {
 		this(g);
 		xPos = x;
 		yPos = y;
+		dead = false;
 	}
 	
 	public Player(Game game){
@@ -144,6 +147,12 @@ public class Player implements Mob {
 		}
 		//System.out.println(direction);
 		
+		if(health <= 0){
+			dead = true;
+		}
+		else{
+			dead = false;
+		}
 		
 		counter ++;
 		if(counter > 60/FPS){
