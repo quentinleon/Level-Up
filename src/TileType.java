@@ -1,3 +1,4 @@
+import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -16,12 +17,13 @@ public enum TileType {
 	stoneWall("stoneWall", false), //TODO change to not wall
 	none(null, false);
 	
-	//private final String name;
+	private final String name;
 	private final boolean traversable;
 	private BufferedImage img;
 	
 	TileType(String name, boolean traversable){
 		this.traversable = traversable;
+		this.name = name;
 		
 		img = null;
 		try{
@@ -45,5 +47,27 @@ public enum TileType {
 	
 	public static TileType getRandomTile(){
 		return VALUES[RANDOM.nextInt(SIZE)];
+	}
+	
+	public String getName(){
+		return name;
+	}
+	
+	public String toString(){
+		return getName();
+	}
+	
+	public static TileType fromString(String s){
+		for(TileType t: TileType.values()){
+			if(t.name().equals(s)){
+				return t;
+			}
+		}
+		return none;
+	}
+	
+	public static TileType fromColor(Color s){
+		//TODO from color
+		return stone;
 	}
 }
