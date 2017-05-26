@@ -1,3 +1,4 @@
+import java.awt.Color;
 import java.awt.Graphics;
 
 import java.awt.image.BufferedImage;
@@ -13,7 +14,9 @@ public class Player implements Mob {
 	
 	private double xPos = 0;
 	private double yPos = 0;
-	private double speed = 5;
+	
+	private final double speed = 5;
+	private final double[] boundingBox = {.1,.7,.6,.9};
 	
 	double nextX;
 	double nextY;
@@ -24,10 +27,11 @@ public class Player implements Mob {
 	
 	public int direction;
 	
-	public int health = 20;
-	public int damage = 2;
+	private final int MAX_HEALTH = 20;;
+	private int health = MAX_HEALTH;
+	private int damage = 2;
 	
-	public boolean dead;
+	private boolean dead;
 	
 	//current image displayed
 	BufferedImage img;
@@ -69,6 +73,8 @@ public class Player implements Mob {
 	private Animation attack_d = new Animation("attack_d", 5);
 	private Animation attack_l = new Animation("attack_l", 5);
 	private Animation attack_r = new Animation("attack_r", 5);
+	
+	private Animation deadanim = new Animation("dead", 1);
 
 	private int animFrame = 0;
 	private int FPS = 5;
@@ -117,11 +123,13 @@ public class Player implements Mob {
 		nextX = (xPos + xVelocity);
 		nextY = (yPos + yVelocity);
 		
-		if(game.map.isTraversable((int)(nextX + .1), (int)(yPos + .7) ) && game.map.isTraversable((int)(nextX + .6), (int)(yPos + .7) )){
+		if(game.map.isTraversable((int)(nextX + boundingBox[0]), (int)(yPos + boundingBox[1]) ) 
+				&& game.map.isTraversable((int)(nextX + boundingBox[2]), (int)(yPos + boundingBox[3]) )){
 			xPos = nextX;
 		}
 		
-		if(game.map.isTraversable((int)(xPos + .1), (int)(nextY + .7) ) && game.map.isTraversable((int)(xPos + .6), (int)(nextY + .7) )){
+		if(game.map.isTraversable((int)(xPos + boundingBox[0]), (int)(nextY + boundingBox[1]) )
+				&& game.map.isTraversable((int)(xPos + boundingBox[2]), (int)(nextY + boundingBox[3]) )){
 			yPos = nextY;
 		}
 		
@@ -161,6 +169,7 @@ public class Player implements Mob {
 		
 		if(health <= 0){
 			dead = true;
+			health = 0;
 		}
 		else{
 			dead = false;
@@ -198,6 +207,21 @@ public class Player implements Mob {
 			g.drawImage(img, drawPosX, drawPosY, drawPosX + Game.UNIT, drawPosY + Game.UNIT,
 					img.getHeight(null) * animFrame, 0,
 					img.getHeight(null) * (animFrame + 1), img.getHeight(null), null);
+			if(game.debug){
+				g.setColor(Color.GREEN);
+				if(dead){g.setColor(Color.ORANGE);}
+				g.fillOval(drawPosX + (int)(boundingBox[0] * Game.UNIT), drawPosY + (int)(boundingBox[1] * Game.UNIT), 4, 4);
+				g.fillOval(drawPosX + (int)(boundingBox[0] * Game.UNIT), drawPosY + (int)(boundingBox[3] * Game.UNIT), 4, 4);
+				g.fillOval(drawPosX + (int)(boundingBox[2] * Game.UNIT), drawPosY + (int)(boundingBox[1] * Game.UNIT), 4, 4);
+				g.fillOval(drawPosX + (int)(boundingBox[2] * Game.UNIT), drawPosY + (int)(boundingBox[3] * Game.UNIT), 4, 4);
+				
+				g.setColor(Color.GREEN);
+				g.fillRect(drawPosX - 10, drawPosY, 10, Game.UNIT);
+				g.setColor(Color.RED);
+				g.fillRect(drawPosX - 10, drawPosY, 10, Game.UNIT - (int)(Game.UNIT * ((double)health/MAX_HEALTH)));
+				g.setColor(Color.BLACK);
+				g.drawRect(drawPosX - 10, drawPosY, 10, Game.UNIT);
+			}
 			
 		}
 	}

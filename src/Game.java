@@ -15,6 +15,7 @@ public class Game implements Runnable {
 	public boolean debug = true;
 	
 	public Game () {
+		enemies = new ArrayList<Mob>();
 		//if we can't load the map, load a default map
 		if(MapLoader.loadLevel("test", this) == false){
 			map = new TileMap(100,100);	
@@ -22,17 +23,14 @@ public class Game implements Runnable {
 			
 			player = new Player(this, 10, 5);
 	
-			enemies = new ArrayList<Mob>();
-			Enemy e1 = new Enemy(player, "fireMonster", 1, 1, 3);
-			Enemy e2 = new Enemy(player, "piskel", 1, 1, 4);
+			Enemy e1 = new Enemy(this, player, "fireMonster", 1, 1, 3);
+			Enemy e2 = new Enemy(this, player, "piskel", 1, 1, 4);
 			enemies.add(e1);
 			//enemies.add(e2);
 		}
 		
-		enemies = new ArrayList<Mob>();
-		
-		Enemy e1 = new Enemy(player, "fireMonster", 1, 1, 2);
-		Enemy e2 = new Enemy(player, "piskel", 1, 1, 2);
+		Enemy e1 = new Enemy(this, player, "fireMonster", 1, 1, 2);
+		Enemy e2 = new Enemy(this, player, "piskel", 1, 1, 2);
 		enemies.add(e2);
 		
 		//need to do this in game	

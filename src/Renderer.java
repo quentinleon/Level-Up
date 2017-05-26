@@ -61,6 +61,10 @@ public class Renderer extends JPanel {
 						//draw it at the correct position
 							g.drawImage(img, xPos, yPos, xPos + Game.UNIT + 1, yPos + Game.UNIT + 1,
 									0, 0, img.getWidth(null), img.getHeight(null), null);
+							if(game.debug){
+								g.setColor(Color.RED);
+								g.fillOval(xPos-2, yPos-2, 4, 4);
+							}
 						}
 					}
 				}
@@ -100,15 +104,16 @@ public class Renderer extends JPanel {
 			}
 		}
 		
-		for(Mob mob : game.enemies){
-			mob.draw(g, game.camera);
-		}
-		
 		//draw walls and mobs?
 		for(int y = yRange[0]; y < yRange[1]; y++){
 			for(int x = xRange[0]; x < xRange[1]; x++){
 				if((int)(game.player.getY()) == y){
 					game.player.draw(g, game.camera);
+				}
+				for(Mob mob : game.enemies){
+					if((int)(mob.getY()) == y){
+						mob.draw(g, game.camera);
+					}
 				}
 				//set draw color to transparent black
 				g.setColor(tempWallColor);
@@ -125,17 +130,6 @@ public class Renderer extends JPanel {
 						g.drawImage(img, xPos - 1, yPos - height, xPos + Game.UNIT + 1, (yPos + Game.UNIT) - height,
 								0, 0, img.getWidth(null), img.getHeight(null), null);
 					}
-				}
-			}
-		}
-		
-		if(game.debug){
-			g.setColor(Color.RED);
-			for(int y = yRange[0]; y < yRange[1]; y++){
-				for(int x = xRange[0]; x < xRange[1]; x++){
-					int xPos = (int)((x - xOffset) * Game.UNIT) - 2;
-					int yPos = (int)((y - yOffset) * Game.UNIT) - 2;
-					g.fillOval(xPos, yPos, 4, 4);
 				}
 			}
 		}
