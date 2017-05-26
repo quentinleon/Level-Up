@@ -16,9 +16,11 @@ public class Renderer extends JPanel {
 	
 	private double wallHeight = 1.7;
 	
-	public Renderer(Game game){
+	public Renderer(Game game, InputHandler keyListener){
 		this.game = game;
 		map = game.map.getMap();
+		addKeyListener(keyListener);
+		setFocusable(true);
 	}
 	
 	public void paintComponent(Graphics g){
@@ -62,6 +64,9 @@ public class Renderer extends JPanel {
 				}
 			}
 			
+		final double SHS = 1.2; //shadow height scale
+		final double SWS = .6; //shadow width scale
+		
 		//draw shadows 
 		for(int y = yRange[0]; y < yRange[1]; y++){
 			for(int x = xRange[0]; x < xRange[1]; x++){
@@ -73,21 +78,19 @@ public class Renderer extends JPanel {
 					//draw the shadow
 					int xPos = (int)((x - xOffset) * Game.UNIT);
 					int yPos = (int)((y - yOffset) * Game.UNIT);
-					
-					//TODO make polygons based on variables, not constants.
-					
+										
 					//draw topShadow
 					if((y - 1) >= yRange[0] && map[x][y-1].getHeight() == 0){
-						int[] xPoints = {xPos, xPos + (height), xPos + Game.UNIT + (height), xPos + Game.UNIT, xPos};
-						int[] yPoints = {yPos, yPos - (int)(height*1.5), yPos - (int)(height*1.5), yPos, yPos};
+						int[] xPoints = {xPos, xPos + (int)(height*SWS), xPos + Game.UNIT + (int)(height*SWS), xPos + Game.UNIT, xPos};
+						int[] yPoints = {yPos, yPos - (int)(height*SHS), yPos - (int)(height*SHS), yPos, yPos};
 						Polygon polygon = new Polygon(xPoints, yPoints, xPoints.length);
 						g.fillPolygon(polygon);
 					}
 
 					//draw sideShadow
 					if((x + 1) < xRange[1] && map[x + 1][y].getHeight() == 0){
-						int[] xPoints = {xPos + Game.UNIT, xPos + height + Game.UNIT, xPos + height + Game.UNIT, xPos + Game.UNIT, xPos + Game.UNIT};
-						int[] yPoints = {yPos, yPos - (int)(height*1.5), yPos - (int)(height*1.5) + Game.UNIT, yPos + Game.UNIT, yPos};
+						int[] xPoints = {xPos + Game.UNIT, xPos + (int)(height*SWS) + Game.UNIT, xPos + (int)(height*SWS) + Game.UNIT, xPos + Game.UNIT, xPos + Game.UNIT};
+						int[] yPoints = {yPos, yPos - (int)(height*SHS), yPos - (int)(height*SHS) + Game.UNIT, yPos + Game.UNIT, yPos};
 						Polygon polygon = new Polygon(xPoints, yPoints, xPoints.length);
 						g.fillPolygon(polygon);
 					}

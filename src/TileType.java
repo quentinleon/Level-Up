@@ -1,3 +1,4 @@
+import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -62,6 +63,11 @@ public enum TileType {
 				return t;
 			}
 		}
-		return null;
+		return none;
+	}
+	
+	public static TileType fromColor(Color s){
+		//TODO from color
+		return stone;
 	}
 }

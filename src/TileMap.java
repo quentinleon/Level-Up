@@ -32,6 +32,10 @@ public class TileMap {
 		}
 	}
 	
+	public void setTile(int x, int y, TileType type, double height){
+		map[x][y] = new Tile(type, height);
+	}
+	
 	public Tile getTile(int x, int y){
 		return map[x][y];
 	}
