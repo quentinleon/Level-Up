@@ -9,11 +9,14 @@ import javax.imageio.ImageIO;
 public class Player implements Mob {
 
 	public InputHandler input;
+	private Game game;
 	
 	private double xPos = 0;
 	private double yPos = 0;
 	private double speed = 5;
 	
+	double nextX;
+	double nextY;
 	double xVelocity;
 	double yVelocity;
 	
@@ -80,6 +83,7 @@ public class Player implements Mob {
 	
 	public Player(Game game){
 		input = new InputHandler();
+		this.game = game;
 		
 		img = walk_r.getImage();
 		//TODO set img based on movement state
@@ -109,9 +113,17 @@ public class Player implements Mob {
 		if(input.right.isPressed()){
 			xVelocity += speed / 60;
 		}
+			
+		nextX = (xPos + xVelocity);
+		nextY = (yPos + yVelocity);
 		
-		xPos += xVelocity;
-		yPos += yVelocity;
+		if(game.map.isTraversable((int)(nextX + .1), (int)(yPos + .7) ) && game.map.isTraversable((int)(nextX + .6), (int)(yPos + .7) )){
+			xPos = nextX;
+		}
+		
+		if(game.map.isTraversable((int)(xPos + .1), (int)(nextY + .7) ) && game.map.isTraversable((int)(xPos + .6), (int)(nextY + .7) )){
+			yPos = nextY;
+		}
 		
 		if(xVelocity > 0 || yVelocity > 0){
 			moving = true;

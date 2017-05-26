@@ -12,6 +12,7 @@ public class Game implements Runnable {
 	public ArrayList<Mob> enemies;
 	public Camera camera;
 	public Renderer renderer;
+	public boolean debug = true;
 	
 	public Game () {
 		//if we can't load the map, load a default map

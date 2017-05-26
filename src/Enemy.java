@@ -85,7 +85,6 @@ public class Enemy implements Mob{
 		if (( Math.abs(playerX - xPos) <= 1 && Math.abs(playerY - yPos) <= 1 ) == true){
 			damageDistance = true;
 			tickCount++;
-			System.out.println(tickCount);
 		}
 		
 		if (tickCount % 60 == 0){

@@ -16,6 +16,8 @@ public class Renderer extends JPanel {
 	
 	private double wallHeight = 1.7;
 	
+	private boolean debug = true;
+	
 	public Renderer(Game game, InputHandler keyListener){
 		this.game = game;
 		map = game.map.getMap();
@@ -125,6 +127,17 @@ public class Renderer extends JPanel {
 					}
 				}
 			}
-		}	
+		}
+		
+		if(game.debug){
+			g.setColor(Color.RED);
+			for(int y = yRange[0]; y < yRange[1]; y++){
+				for(int x = xRange[0]; x < xRange[1]; x++){
+					int xPos = (int)((x - xOffset) * Game.UNIT) - 2;
+					int yPos = (int)((y - yOffset) * Game.UNIT) - 2;
+					g.fillOval(xPos, yPos, 4, 4);
+				}
+			}
+		}
 	}
 }
