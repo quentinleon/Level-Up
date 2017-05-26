@@ -6,8 +6,6 @@ public class Game implements Runnable {
 	public static final int TILE_SIZE = 16; //the pixel size of each tile image
 	public static final double TILE_SCALE = 5; //the factor to multiply the size with
 	public static final int UNIT = (int)(TILE_SIZE * TILE_SCALE); //Factor to multiply world coordinates into screenspace pixel coordinates
-
-	public static Game G;
 	
 	public TileMap map;
 	public Player player;
@@ -16,9 +14,8 @@ public class Game implements Runnable {
 	public Renderer renderer;
 	
 	public Game () {
-		G = this;
 		//if we can't load the map, load a default map
-		if(MapLoader.loadSave("save.lul", this) == false){
+		if(MapLoader.loadLevel("test", this) == false){
 			map = new TileMap(100,100);	
 			map.makeTestMap();
 			

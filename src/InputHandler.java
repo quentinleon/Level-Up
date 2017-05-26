@@ -49,9 +49,6 @@ public class InputHandler implements KeyListener {
 		}
 		if(keyCode == KeyEvent.VK_D || keyCode == KeyEvent.VK_RIGHT) {
 			right.toggle(isPressed);
-		}
-		if(keyCode == KeyEvent.VK_H) {
-			MapSaver.save("save2.lul", Game.G);
-		}
-	}
+		}	
+	}	
 }

@@ -100,6 +100,11 @@ public class Player implements Mob {
 		}
 	}
 
+	public void setPosition(double x, double y){
+		xPos = x;
+		yPos = y;
+	}
+	
 	@Override
 	public double getX() {
 		return xPos;
