@@ -14,6 +14,16 @@ public class Player implements Mob {
 	private double yPos = 0;
 	private double speed = 5;
 	
+	double xVelocity;
+	double yVelocity;
+	
+	public boolean moving;
+	
+	public int direction;
+	
+	public int health;
+	public int damage;
+	
 	//current image displayed
 	BufferedImage img;
 	
@@ -76,19 +86,64 @@ public class Player implements Mob {
 		
 	}
 
+	public void damage(int damageTaken){
+		health -= damageTaken;
+	}
+	
 	public void update() {
+		xVelocity = 0;
+		yVelocity = 0;
+		
 		if(input.up.isPressed()){
-			yPos -= speed / 60;
+			yVelocity -= speed / 60;
 		}
 		if(input.down.isPressed()){
-			yPos += speed / 60;	
+			yVelocity += speed / 60;
 		}
 		if(input.left.isPressed()){
-			xPos -= speed / 60;
+			xVelocity -= speed / 60;
 		}
 		if(input.right.isPressed()){
-			xPos += speed / 60;
+			xVelocity += speed / 60;
 		}
+		
+		xPos += xVelocity;
+		yPos += yVelocity;
+		
+		if(xVelocity > 0 || yVelocity > 0){
+			moving = true;
+		}
+		else{
+			moving = false;
+		}
+		
+		//find the direction player is facing, use for animation choosing and attack
+		if(xVelocity == 0 && yVelocity < 0){
+			direction = 0;
+		}
+		else if(xVelocity > 0 && yVelocity < 0){
+			direction = 45;
+		}		
+		else if(xVelocity > 0 && yVelocity == 0){
+			direction = 90;
+		}
+		else if(xVelocity > 0 && yVelocity > 0){
+			direction = 135;
+		}
+		else if(xVelocity  == 0 && yVelocity > 0){
+			direction = 180;
+		}
+		else if(xVelocity < 0 && yVelocity > 0){
+			direction = 225;
+		}
+		else if(xVelocity < 0 && yVelocity == 0){
+			direction = 270;
+		}
+		else if(xVelocity < 0 && yVelocity < 0){
+			direction = 315;
+		}
+		//System.out.println(direction);
+		
 		
 		counter ++;
 		if(counter > 60/FPS){
