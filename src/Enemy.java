@@ -15,6 +15,7 @@ public class Enemy implements Mob{
 	private int speed;
 	private double playerX;
 	private double playerY;
+	private int tickCount;
 	
 	private int animFrame = 0;
 	private int FPS = 5;
@@ -61,34 +62,57 @@ public class Enemy implements Mob{
 			}
 		}
 		
-		if (close() == true){
-			
+		double inrange = .5;
+		
+		if(inSight() && Math.abs(playerX - xPos) > inrange){
 			if (playerX > xPos){
 				xPos += speed / 60.0;
 			}
 			else if (playerX < xPos){
 				xPos -= speed / 60.0;
 			}
-			
+		} 
+		if(inSight() && Math.abs(playerY - yPos) > inrange){
 			if (playerY > yPos){
 				yPos += speed / 60.0;
 			}
-			else if (playerY < xPos){
+			else if (playerY < yPos){
 				yPos -= speed / 60.0;
 			}
-			
-			} 
+		}
 		
+		boolean damageDistance = false;
+		if (( Math.abs(playerX - xPos) <= 1 && Math.abs(playerY - yPos) <= 1 ) == true){
+			damageDistance = true;
+			tickCount++;
+			System.out.println(tickCount);
+		}
+		
+		if (tickCount % 60 == 0){
+			tickCount = 0;
+			//do damage
+			
+		}
 		
 		}
 		
 
-	public boolean close(){
+	public boolean inSight(){
 		boolean close = false;
 		if (( Math.abs(playerX - xPos) <= 7 && Math.abs(playerY - yPos) <= 7 ) == true){
 			close = true;
 		}
 		return close;
+	}
+	
+	public boolean inRange(){
+		boolean damageDistance = false;
+		if (( Math.abs(playerX - xPos) <= 1 && Math.abs(playerY - yPos) <= 1 ) == true){
+			damageDistance = true;
+			tickCount++;
+			System.out.println(tickCount);
+		}
+		return damageDistance;
 	}
 
 	@Override
