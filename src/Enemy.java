@@ -11,7 +11,7 @@ public class Enemy implements Mob{
 	private double xPos;
 	private double yPos;
 	private Mob target;
-	private int damage;
+	private int damageValue;
 	private int speed;
 	private double playerX;
 	private double playerY;
@@ -26,7 +26,7 @@ public class Enemy implements Mob{
 	public Enemy(Mob player, String name, int healthNumber, int damageNumber, int speedNumber){
 		health = healthNumber;
 		target = player;
-		damage = damageNumber;
+		damageValue = damageNumber;
 		speed = speedNumber;
 		playerX = target.getX();
 		playerY = target.getY();
@@ -64,6 +64,7 @@ public class Enemy implements Mob{
 		
 		double inrange = .5;
 		
+		//if we are close, but not too close on the X, move the X
 		if(inSight() && Math.abs(playerX - xPos) > inrange){
 			if (playerX > xPos){
 				xPos += speed / 60.0;
@@ -72,6 +73,7 @@ public class Enemy implements Mob{
 				xPos -= speed / 60.0;
 			}
 		} 
+		//if we are close, but not too close on the Y, move the Y
 		if(inSight() && Math.abs(playerY - yPos) > inrange){
 			if (playerY > yPos){
 				yPos += speed / 60.0;
@@ -81,22 +83,28 @@ public class Enemy implements Mob{
 			}
 		}
 		
-		boolean damageDistance = false;
-		if (( Math.abs(playerX - xPos) <= 1 && Math.abs(playerY - yPos) <= 1 ) == true){
-			damageDistance = true;
+		//if we are very close to the player, start counting
+		if (( Math.abs(playerX - xPos) <= inrange * 2 && Math.abs(playerY - yPos) <= inrange * 2 ) == true){
 			tickCount++;
-			System.out.println(tickCount);
-		}
-		
-		if (tickCount % 60 == 0){
+		} else {
 			tickCount = 0;
-			//do damage
-			
 		}
 		
+		if (tickCount / 60 >= 1){
+			tickCount = 0;
+			System.out.println("Attacked");
+			attack(damageValue);	
 		}
-		
-
+	}
+	
+	public void attack(int damage){
+		target.damage(damage);
+	}
+	
+	public void damage(int damage){
+		health -= damage;
+	}
+	
 	public boolean inSight(){
 		boolean close = false;
 		if (( Math.abs(playerX - xPos) <= 7 && Math.abs(playerY - yPos) <= 7 ) == true){
