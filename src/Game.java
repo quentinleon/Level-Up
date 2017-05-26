@@ -30,6 +30,10 @@ public class Game implements Runnable {
 		
 		enemies = new ArrayList<Mob>();
 		
+		Enemy e1 = new Enemy(player, "fireMonster", 1, 1, 2);
+		Enemy e2 = new Enemy(player, "piskel", 1, 1, 2);
+		enemies.add(e2);
+		
 		//need to do this in game	
 		renderer = new Renderer(this, player.input.getKeyListener());
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
