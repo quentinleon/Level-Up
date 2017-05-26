@@ -35,12 +35,10 @@ public class MapLoader {
 	
 	public static boolean loadLevel(String level, Game g){
 		System.out.println("Loading level -" + level);
-		BufferedImage tiles = null;
-		BufferedImage zones = null;
+		BufferedImage img = null;
 		try{
-			tiles = ImageIO.read(new File("levels/t" + level +".png"));
-			zones = ImageIO.read(new File("levels/d" + level +".png"));
-			processImage(tiles, zones, g);
+			img = ImageIO.read(new File("levels/" + level +"/map.png"));
+			processImage(img, g);
 			return true;
 		} catch(IOException e){
 			System.out.println("Could not load level -" + level + "!");
@@ -70,22 +68,21 @@ public class MapLoader {
 	}
 	
 	private static final double WALL_HEIGHT = 1.7;
-	private static void processImage(BufferedImage tiles, BufferedImage data, Game g){
-		int width = tiles.getWidth();
-		int height = tiles.getHeight();
+	private static void processImage(BufferedImage img, Game g){
+		int width = img.getWidth();
+		int height = img.getHeight();
 		
 		g.map = new TileMap(width,height);
 		g.player = new Player(g);
 		
 	    for (int x = 0; x < width; x++) {
 	        for (int y = 0; y < height; y++) {
-	        	Color t = new Color(tiles.getRGB(x, y), true);
-	        	Color d = new Color(data.getRGB(x, y), true);
+	        	Color tileColor = new Color(img.getRGB(x, y), true);
 	        		        	
-	        	double tileHeight = d.equals(Color.WHITE) ? WALL_HEIGHT : 0;
-	        	g.map.setTile(x, y, TileType.fromColor(t), tileHeight);
+	        	double tileHeight = tileColor.equals(Color.WHITE) ? WALL_HEIGHT : 0;
+	        	g.map.setTile(x, y, TileType.fromColor(tileColor), tileHeight);
 	        	
-	        	if(tileHeight == 0 && d.getGreen() == 255){
+	        	if(tileHeight == 0 && tileColor.getGreen() == 255){
 	        		g.player.setPosition(x, y);;
 	        	}
 
