@@ -6,6 +6,7 @@ public class Game implements Runnable {
 	public static final int TILE_SIZE = 16; //the pixel size of each tile image
 	public static final double TILE_SCALE = 5; //the factor to multiply the size with
 	public static final int UNIT = (int)(TILE_SIZE * TILE_SCALE); //Factor to multiply world coordinates into screenspace pixel coordinates
+	public static final double WALL_HEIGHT = 1.3;
 	
 	public TileMap map;
 	public Player player;

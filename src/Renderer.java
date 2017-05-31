@@ -13,11 +13,7 @@ public class Renderer extends JPanel {
 	
 	private Color shadow = new Color(0,0,0,120);
 	private Color tempWallColor = new Color(150,150,150); //TODO replace with wall texture :D
-	
-	private double wallHeight = 1.7;
-	
-	private boolean debug = true;
-	
+			
 	public Renderer(Game game, InputHandler keyListener){
 		this.game = game;
 		map = game.map.getMap();
@@ -38,8 +34,8 @@ public class Renderer extends JPanel {
 	
 	private void draw(Graphics g, double xOffset, double yOffset, int windowWidth, int windowHeight){
 		//compute what part of the map needs to be rendered
-		int[] xRange = {(int)(xOffset - wallHeight), (int)(windowWidth)};
-		int[] yRange = {(int)(yOffset), (int)(windowHeight + (wallHeight * 1.5) + 1)};
+		int[] xRange = {(int)(xOffset - Game.WALL_HEIGHT), (int)(windowWidth)};
+		int[] yRange = {(int)(yOffset), (int)(windowHeight + (Game.WALL_HEIGHT * 1.5) + 1)};
 				
 		//don't try to draw what's not there
 		if(xRange[0] < 0){xRange[0] = 0;}
@@ -105,6 +101,7 @@ public class Renderer extends JPanel {
 		}
 		
 		//draw walls and mobs?
+		BufferedImage wall = TileType.wall.getImage();
 		for(int y = yRange[0]; y < yRange[1]; y++){
 			for(int x = xRange[0]; x < xRange[1]; x++){
 				for(Mob mob : game.enemies){
@@ -118,16 +115,24 @@ public class Renderer extends JPanel {
 				//set draw color to transparent black
 				g.setColor(tempWallColor);
 				//compute the height for each tile
-				int height = (int)(map[x][y].getHeight() * Game.UNIT);
-				if(height > 0){
+				int topHeight = (int)(map[x][y].getHeight() * Game.UNIT);
+				int wallHeight = (int)(map[x][y].getHeight() + .9);
+				if(topHeight > 0){
 					BufferedImage img = map[x][y].getImage();
 					if(img != null){
 						int xPos = (int)((x - xOffset) * Game.UNIT);
 						int yPos = (int)((y - yOffset) * Game.UNIT);
 						//draw wall
-						g.fillRect(xPos - 1, (yPos + Game.UNIT) - height, Game.UNIT + 2, height + 1);
+						g.fillRect(xPos - 1, (yPos + Game.UNIT) - topHeight, Game.UNIT + 2, topHeight + 1);
+						
+						//TODO draw wall texture correctly
+						/*for(int wallSegment = 0; wallSegment < wallHeight; wallSegment++){
+							g.drawImage(wall, xPos - 1, yPos - ((wallSegment) * Game.UNIT), xPos + Game.UNIT + 1, (yPos + Game.UNIT) - ((wallSegment) * Game.UNIT),
+									0, 0, wall.getWidth(null), wall.getHeight(null), null);
+						}*/
+						
 						//draw the top of the wall
-						g.drawImage(img, xPos - 1, yPos - height, xPos + Game.UNIT + 1, (yPos + Game.UNIT) - height,
+						g.drawImage(img, xPos - 1, yPos - topHeight, xPos + Game.UNIT + 1, (yPos + Game.UNIT) - topHeight,
 								0, 0, img.getWidth(null), img.getHeight(null), null);
 					}
 				}
