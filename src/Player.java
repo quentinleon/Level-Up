@@ -23,9 +23,9 @@ public class Player implements Mob {
 	double xVelocity;
 	double yVelocity;
 	
-	public boolean moving;
+	private boolean moving;
 	
-	public int direction;
+	private int direction;
 	
 	private final int MAX_HEALTH = 20;;
 	private int health = MAX_HEALTH;
@@ -58,12 +58,6 @@ public class Player implements Mob {
 			return fps;
 		}
 	}
-	//animation strips
-	private Animation idle_u = new Animation("idle_u", 2);
-	private Animation idle_d = new Animation("idle_d", 2);
-	private Animation idle_l = new Animation("idle_l", 2);
-	private Animation idle_r = new Animation("idle_r", 2);
-
 	private Animation walk_u = new Animation("walk_u", 5);
 	private Animation walk_d = new Animation("walk_d", 5);
 	private Animation walk_l = new Animation("walk_l", 5);
