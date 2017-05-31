@@ -40,6 +40,11 @@ public class TileMap {
 		return map[x][y];
 	}
 	
+	public boolean isTraversable(int x, int y){
+		boolean inBounds = (x >= 0 && x < width && y >= 0 && y < height);
+		return (inBounds && map[x][y].getHeight() == 0 && map[x][y + 1].getHeight() == 0);
+	}
+	
 	public int[] getSize(){
 		int[] size = {map.length, map[0].length};
 		return size;
