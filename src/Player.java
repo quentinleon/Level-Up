@@ -127,7 +127,7 @@ public class Player implements Mob {
 			yPos = nextY;
 		}
 		
-		if(xVelocity > 0 || yVelocity > 0){
+		if(xVelocity != 0 || yVelocity != 0){
 			moving = true;
 		}
 		else{
@@ -169,12 +169,39 @@ public class Player implements Mob {
 			dead = false;
 		}
 		
+		if(direction >= 45 && direction < 135){
+			if(img != walk_r.getImage()){
+				img = walk_r.getImage();
+				animFrame = 0;
+			}
+		}
+		else if(direction >= 135 && direction < 225){
+			if(img != walk_d.getImage()){
+				img = walk_d.getImage();
+				animFrame = 0;
+			}
+		}
+		else if(direction >= 225 && direction < 315){
+			if(img != walk_l.getImage()){	
+				img = walk_l.getImage();
+				animFrame = 0;
+			}
+		}
+		else if((direction >= 315 && direction < 360) || (direction >= 0 && direction < 45)){
+			if(img != walk_u.getImage()){
+				img = walk_u.getImage();
+				animFrame = 0;
+			}
+		}			
+		
 		counter ++;
 		if(counter > 60/FPS){
 			counter = 0;
-			animFrame ++;
-			if(animFrame >= (img.getWidth() / img.getHeight(null))){
-				animFrame = 0;
+			if(moving){
+				animFrame ++;
+				if(animFrame >= (img.getWidth() / img.getHeight(null))){
+					animFrame = 0;
+				}
 			}
 		}
 	}
@@ -213,8 +240,7 @@ public class Player implements Mob {
 				g.fillRect(drawPosX - 10, drawPosY, 10, Game.UNIT - (int)(Game.UNIT * ((double)health/MAX_HEALTH)));
 				g.setColor(Color.BLACK);
 				g.drawRect(drawPosX - 10, drawPosY, 10, Game.UNIT);
-			}
-			
+			}	
 		}
 	}
 }
