@@ -67,7 +67,6 @@ public class MapLoader {
 	
 	}
 	
-	private static final double WALL_HEIGHT = 1.3;
 	private static void processImage(BufferedImage img, Game g){
 		int width = img.getWidth();
 		int height = img.getHeight();
@@ -79,12 +78,18 @@ public class MapLoader {
 	        for (int y = 0; y < height; y++) {
 	        	Color tileColor = new Color(img.getRGB(x, y), true);
 	        		        	
-	        	double tileHeight = tileColor.equals(Color.WHITE) ? WALL_HEIGHT : 0;
-	        	g.map.setTile(x, y, TileType.fromColor(tileColor), tileHeight);
+	        	double tileHeight = tileColor.equals(Color.WHITE) ? Game.WALL_HEIGHT : 0;
 	        	
 	        	if(tileHeight == 0 && tileColor.getGreen() == 255){
-	        		g.player.setPosition(x, y);;
+	        		g.player.setPosition(x, y);
+	        		//put an upwards ladder
 	        	}
+	        	
+	        	if(tileHeight == 0 && tileColor.getRed() == 255){
+	        		//put an exit ladder
+	        	}
+	        	
+	        	g.map.setTile(x, y, TileType.fromColor(tileColor), tileHeight);
 
 	        }
 	    }

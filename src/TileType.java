@@ -9,20 +9,17 @@ import java.util.Random;
 
 public enum TileType {
 	
-	water("water", false),
-	stone("stone", true),
-	grass("grass", true),
-	sand( "sand", true),
-	gravel("gravel", true),
-	stoneWall("stoneWall", false), //TODO change to not wall
-	none(null, false);
+	stone("stone"),
+	grass("grass"),
+	sand( "sand"),
+	gravel("gravel"),
+	wall("wall"),
+	none(null);
 	
 	private final String name;
-	private final boolean traversable;
 	private BufferedImage img;
 	
-	TileType(String name, boolean traversable){
-		this.traversable = traversable;
+	TileType(String name){
 		this.name = name;
 		
 		img = null;
@@ -35,10 +32,6 @@ public enum TileType {
 	
 	public BufferedImage getImage() {
 		return img;
-	}
-	
-	public boolean isTraversable(){
-		return traversable;
 	}
 	
 	private static final TileType[] VALUES = values();
