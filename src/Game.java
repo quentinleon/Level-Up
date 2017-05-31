@@ -17,7 +17,7 @@ public class Game implements Runnable {
 	public Game () {
 		enemies = new ArrayList<Mob>();
 		//if we can't load the map, load a default map
-		if(MapLoader.loadLevel("test", this) == false){
+		if(MapLoader.loadLevel("20", this) == false){
 			map = new TileMap(100,100);	
 			map.makeTestMap();
 			
