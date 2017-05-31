@@ -209,13 +209,11 @@ public class Player implements Mob {
 					img.getHeight(null) * (animFrame + 1), img.getHeight(null), null);
 			if(game.debug){
 				g.setColor(Color.GREEN);
-				if(dead){g.setColor(Color.ORANGE);}
 				g.fillOval(drawPosX + (int)(boundingBox[0] * Game.UNIT), drawPosY + (int)(boundingBox[1] * Game.UNIT), 4, 4);
 				g.fillOval(drawPosX + (int)(boundingBox[0] * Game.UNIT), drawPosY + (int)(boundingBox[3] * Game.UNIT), 4, 4);
 				g.fillOval(drawPosX + (int)(boundingBox[2] * Game.UNIT), drawPosY + (int)(boundingBox[1] * Game.UNIT), 4, 4);
 				g.fillOval(drawPosX + (int)(boundingBox[2] * Game.UNIT), drawPosY + (int)(boundingBox[3] * Game.UNIT), 4, 4);
 				
-				g.setColor(Color.GREEN);
 				g.fillRect(drawPosX - 10, drawPosY, 10, Game.UNIT);
 				g.setColor(Color.RED);
 				g.fillRect(drawPosX - 10, drawPosY, 10, Game.UNIT - (int)(Game.UNIT * ((double)health/MAX_HEALTH)));

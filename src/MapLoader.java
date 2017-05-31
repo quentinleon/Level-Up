@@ -69,7 +69,7 @@ public class MapLoader {
 	
 	}
 	
-	private static final double WALL_HEIGHT = 1.7;
+	private static final double WALL_HEIGHT = 1.3;
 	private static void processImage(BufferedImage tiles, BufferedImage data, Game g){
 		int width = tiles.getWidth();
 		int height = tiles.getHeight();

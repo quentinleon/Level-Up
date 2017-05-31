@@ -107,13 +107,13 @@ public class Renderer extends JPanel {
 		//draw walls and mobs?
 		for(int y = yRange[0]; y < yRange[1]; y++){
 			for(int x = xRange[0]; x < xRange[1]; x++){
-				if((int)(game.player.getY()) == y){
-					game.player.draw(g, game.camera);
-				}
 				for(Mob mob : game.enemies){
 					if((int)(mob.getY()) == y){
 						mob.draw(g, game.camera);
 					}
+				}
+				if((int)(game.player.getY()) == y){
+					game.player.draw(g, game.camera);
 				}
 				//set draw color to transparent black
 				g.setColor(tempWallColor);
