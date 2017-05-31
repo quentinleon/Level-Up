@@ -1,3 +1,4 @@
+import java.awt.Color;
 import java.awt.Graphics;
 
 import java.awt.image.BufferedImage;
@@ -9,10 +10,28 @@ import javax.imageio.ImageIO;
 public class Player implements Mob {
 
 	public InputHandler input;
+	private Game game;
 	
 	private double xPos = 0;
 	private double yPos = 0;
-	private double speed = 5;
+	
+	private final double speed = 5;
+	private final double[] boundingBox = {.1,.7,.6,.9};
+	
+	double nextX;
+	double nextY;
+	double xVelocity;
+	double yVelocity;
+	
+	public boolean moving;
+	
+	public int direction;
+	
+	private final int MAX_HEALTH = 20;;
+	private int health = MAX_HEALTH;
+	private int damage = 2;
+	
+	private boolean dead;
 	
 	//current image displayed
 	BufferedImage img;
@@ -54,6 +73,8 @@ public class Player implements Mob {
 	private Animation attack_d = new Animation("attack_d", 5);
 	private Animation attack_l = new Animation("attack_l", 5);
 	private Animation attack_r = new Animation("attack_r", 5);
+	
+	private Animation deadanim = new Animation("dead", 1);
 
 	private int animFrame = 0;
 	private int FPS = 5;
@@ -63,10 +84,12 @@ public class Player implements Mob {
 		this(g);
 		xPos = x;
 		yPos = y;
+		dead = false;
 	}
 	
 	public Player(Game game){
 		input = new InputHandler();
+		this.game = game;
 		
 		img = walk_r.getImage();
 		//TODO set img based on movement state
@@ -76,18 +99,80 @@ public class Player implements Mob {
 		
 	}
 
+	public void damage(int damageTaken){
+		health -= damageTaken;
+	}
+	
 	public void update() {
+		xVelocity = 0;
+		yVelocity = 0;
+		
 		if(input.up.isPressed()){
-			yPos -= speed / 60;
+			yVelocity -= speed / 60;
 		}
 		if(input.down.isPressed()){
-			yPos += speed / 60;	
+			yVelocity += speed / 60;
 		}
 		if(input.left.isPressed()){
-			xPos -= speed / 60;
+			xVelocity -= speed / 60;
 		}
 		if(input.right.isPressed()){
-			xPos += speed / 60;
+			xVelocity += speed / 60;
+		}
+			
+		nextX = (xPos + xVelocity);
+		nextY = (yPos + yVelocity);
+		
+		if(game.map.isTraversable((int)(nextX + boundingBox[0]), (int)(yPos + boundingBox[1]) ) 
+				&& game.map.isTraversable((int)(nextX + boundingBox[2]), (int)(yPos + boundingBox[3]) )){
+			xPos = nextX;
+		}
+		
+		if(game.map.isTraversable((int)(xPos + boundingBox[0]), (int)(nextY + boundingBox[1]) )
+				&& game.map.isTraversable((int)(xPos + boundingBox[2]), (int)(nextY + boundingBox[3]) )){
+			yPos = nextY;
+		}
+		
+		if(xVelocity > 0 || yVelocity > 0){
+			moving = true;
+		}
+		else{
+			moving = false;
+		}
+		
+		//find the direction player is facing, use for animation choosing and attack
+		if(xVelocity == 0 && yVelocity < 0){
+			direction = 0;
+		}
+		else if(xVelocity > 0 && yVelocity < 0){
+			direction = 45;
+		}		
+		else if(xVelocity > 0 && yVelocity == 0){
+			direction = 90;
+		}
+		else if(xVelocity > 0 && yVelocity > 0){
+			direction = 135;
+		}
+		else if(xVelocity  == 0 && yVelocity > 0){
+			direction = 180;
+		}
+		else if(xVelocity < 0 && yVelocity > 0){
+			direction = 225;
+		}
+		else if(xVelocity < 0 && yVelocity == 0){
+			direction = 270;
+		}
+		else if(xVelocity < 0 && yVelocity < 0){
+			direction = 315;
+		}
+		//System.out.println(direction);
+		
+		if(health <= 0){
+			dead = true;
+			health = 0;
+		}
+		else{
+			dead = false;
 		}
 		
 		counter ++;
@@ -122,6 +207,19 @@ public class Player implements Mob {
 			g.drawImage(img, drawPosX, drawPosY, drawPosX + Game.UNIT, drawPosY + Game.UNIT,
 					img.getHeight(null) * animFrame, 0,
 					img.getHeight(null) * (animFrame + 1), img.getHeight(null), null);
+			if(game.debug){
+				g.setColor(Color.GREEN);
+				g.fillOval(drawPosX + (int)(boundingBox[0] * Game.UNIT), drawPosY + (int)(boundingBox[1] * Game.UNIT), 4, 4);
+				g.fillOval(drawPosX + (int)(boundingBox[0] * Game.UNIT), drawPosY + (int)(boundingBox[3] * Game.UNIT), 4, 4);
+				g.fillOval(drawPosX + (int)(boundingBox[2] * Game.UNIT), drawPosY + (int)(boundingBox[1] * Game.UNIT), 4, 4);
+				g.fillOval(drawPosX + (int)(boundingBox[2] * Game.UNIT), drawPosY + (int)(boundingBox[3] * Game.UNIT), 4, 4);
+				
+				g.fillRect(drawPosX - 10, drawPosY, 10, Game.UNIT);
+				g.setColor(Color.RED);
+				g.fillRect(drawPosX - 10, drawPosY, 10, Game.UNIT - (int)(Game.UNIT * ((double)health/MAX_HEALTH)));
+				g.setColor(Color.BLACK);
+				g.drawRect(drawPosX - 10, drawPosY, 10, Game.UNIT);
+			}
 			
 		}
 	}

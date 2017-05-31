@@ -67,10 +67,10 @@ public class MapLoader {
 	
 	}
 	
-	private static final double WALL_HEIGHT = 1.7;
-	private static void processImage(BufferedImage img, Game g){
-		int width = img.getWidth();
-		int height = img.getHeight();
+	private static final double WALL_HEIGHT = 1.3;
+	private static void processImage(BufferedImage tiles, BufferedImage data, Game g){
+		int width = tiles.getWidth();
+		int height = tiles.getHeight();
 		
 		g.map = new TileMap(width,height);
 		g.player = new Player(g);

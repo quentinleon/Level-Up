@@ -16,6 +16,8 @@ public class Renderer extends JPanel {
 	
 	private double wallHeight = 1.7;
 	
+	private boolean debug = true;
+	
 	public Renderer(Game game, InputHandler keyListener){
 		this.game = game;
 		map = game.map.getMap();
@@ -59,6 +61,10 @@ public class Renderer extends JPanel {
 						//draw it at the correct position
 							g.drawImage(img, xPos, yPos, xPos + Game.UNIT + 1, yPos + Game.UNIT + 1,
 									0, 0, img.getWidth(null), img.getHeight(null), null);
+							if(game.debug){
+								g.setColor(Color.RED);
+								g.fillOval(xPos-2, yPos-2, 4, 4);
+							}
 						}
 					}
 				}
@@ -98,13 +104,14 @@ public class Renderer extends JPanel {
 			}
 		}
 		
-		for(Mob mob : game.enemies){
-			mob.draw(g, game.camera);
-		}
-		
 		//draw walls and mobs?
 		for(int y = yRange[0]; y < yRange[1]; y++){
 			for(int x = xRange[0]; x < xRange[1]; x++){
+				for(Mob mob : game.enemies){
+					if((int)(mob.getY()) == y){
+						mob.draw(g, game.camera);
+					}
+				}
 				if((int)(game.player.getY()) == y){
 					game.player.draw(g, game.camera);
 				}
@@ -125,6 +132,6 @@ public class Renderer extends JPanel {
 					}
 				}
 			}
-		}	
+		}
 	}
 }
