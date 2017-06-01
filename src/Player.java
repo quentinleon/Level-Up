@@ -16,7 +16,7 @@ public class Player implements Mob {
 	private double yPos = 0;
 	
 	private final double speed = 5;
-	private final double[] boundingBox = {.1,.7,.6,.9};
+	private final double[] boundingBox = {.3,.7,.7,.9};
 	
 	double nextX;
 	double nextY;

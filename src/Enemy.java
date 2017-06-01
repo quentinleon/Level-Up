@@ -18,7 +18,7 @@ public class Enemy implements Mob{
 	private double playerX;
 	private double playerY;
 	private int tickCount;
-	private final double[] boundingBox = {.0,.6,.9,.8};
+	private final double[] boundingBox = {.2,.6,.8,.8};
 	
 	private int animFrame = 0;
 	private int FPS = 5;
