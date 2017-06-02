@@ -1,6 +1,5 @@
 import java.awt.Toolkit;
 import java.util.ArrayList;
-import java.awt.Color;
 import java.awt.Dimension;
 
 public class Game implements Runnable {	
@@ -8,7 +7,7 @@ public class Game implements Runnable {
 	public static final double TILE_SCALE = 5; //the factor to multiply the size with
 	public static final int UNIT = (int)(TILE_SIZE * TILE_SCALE); //Factor to multiply world coordinates into screenspace pixel coordinates
 	public static final double WALL_HEIGHT = 1.3;
-	public static final int START_LEVEL = 20;
+	public static final int START_LEVEL = 1;
 	
 	public TileMap map;
 	public Player player;
@@ -21,7 +20,6 @@ public class Game implements Runnable {
 	private boolean loadingNext = false;
 	
 	private int level = START_LEVEL;
-	private int[] goal;
 	
 	public Game () {
 		//if we can't load the map, load a default map

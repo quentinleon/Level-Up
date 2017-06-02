@@ -1,4 +1,3 @@
-import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -17,8 +16,7 @@ public enum TileType {
 	floor("cobblestone"),
 	trapDoor("trapDoor"),
 	ladder("ladder"),
-	ladderW("ladderW"),
-	none(null);
+	ladderW("ladderW");
 	
 	private final String name;
 	private BufferedImage img;
@@ -60,11 +58,6 @@ public enum TileType {
 				return t;
 			}
 		}
-		return none;
-	}
-	
-	public static TileType fromColor(Color s){
-		//TODO from color
-		return stone;
+		return null;
 	}
 }

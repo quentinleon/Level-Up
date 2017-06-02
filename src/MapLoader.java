@@ -109,12 +109,7 @@ public class MapLoader {
 	        	Color tileColor = new Color(img.getRGB(x, y), true);
 	        		        	
 	        	double tileHeight = tileColor.equals(Color.WHITE) ? Game.WALL_HEIGHT : 0;
-	        	
 	        	TileType type = tileColor.equals(Color.WHITE) ? TileType.stone : TileType.floor;
-	        	
-	        	if(g.getLevel() == 0){
-	        		type = TileType.grass;
-	        	}
 	        	
 	        	if(tileHeight == 0 && tileColor.getGreen() == 255){
 	        		g.player.setPosition(x, y);
@@ -129,6 +124,12 @@ public class MapLoader {
 	        		g.player.setExit(x, y);
 	        	}
 	        	
+	        	//if we're on ground level, custom loading parameters
+	        	if(g.getLevel() == 0 && type != TileType.trapDoor){
+	        		type = tileColor.equals(Color.WHITE) ? TileType.sand : TileType.grass;
+	        		tileHeight = 0;
+	        	}
+
 	        	g.map.setTile(x, y, type, tileHeight);
 
 	        }
