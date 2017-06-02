@@ -7,7 +7,7 @@ public class Game implements Runnable {
 	public static final double TILE_SCALE = 5; //the factor to multiply the size with
 	public static final int UNIT = (int)(TILE_SIZE * TILE_SCALE); //Factor to multiply world coordinates into screenspace pixel coordinates
 	public static final double WALL_HEIGHT = 1.3;
-	public static final int START_LEVEL = 1;
+	public static final int START_LEVEL = 5;
 	
 	public TileMap map;
 	public Player player;
@@ -19,9 +19,26 @@ public class Game implements Runnable {
 	private int blackAlpha = 500;
 	private boolean loadingNext = false;
 	
-	private int level = START_LEVEL;
+	private int level;
 	
 	public Game () {
+		restart();
+		//need to do this in game	
+		renderer = new Renderer(this, player.input.getKeyListener());
+		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+		camera = new Camera(player);
+		camera.setXOffset((screenSize.getWidth()/2) / (Game.UNIT) - (.5));
+		camera.setYOffset((screenSize.getHeight()/2) / Game.UNIT - (.5));
+		
+		new Thread(this).start();
+	}
+	
+	public void restart(){
+		level = START_LEVEL;
+		blackAlpha = 500;
+		if(player != null){
+			player.reset();
+		}
 		//if we can't load the map, load a default map
 		if(MapLoader.loadLevel(Integer.toString(level), this) == false){
 			enemies = new ArrayList<Mob>();
@@ -35,15 +52,6 @@ public class Game implements Runnable {
 			enemies.add(e1);
 			enemies.add(e2);
 		}
-		
-		//need to do this in game	
-		renderer = new Renderer(this, player.input.getKeyListener());
-		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-		camera = new Camera(player);
-		camera.setXOffset((screenSize.getWidth()/2) / (Game.UNIT) - (.5));
-		camera.setYOffset((screenSize.getHeight()/2) / Game.UNIT - (.5));
-		
-		new Thread(this).start();
 	}
 	
 	public void run(){

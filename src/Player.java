@@ -27,12 +27,14 @@ public class Player implements Mob {
 	double yVelocity;
 	
 	private boolean moving;
+	private boolean attacking;
 	
 	private int direction;
 	
 	private final int MAX_HEALTH = 20;;
 	private int health = MAX_HEALTH;
 	private int damage = 2;
+	private double range = 1;
 	
 	private boolean dead;
 	
@@ -71,8 +73,6 @@ public class Player implements Mob {
 	private Animation attack_l = new Animation("attack_l", 5);
 	private Animation attack_r = new Animation("attack_r", 5);
 	
-	private Animation deadanim = new Animation("dead", 1);
-
 	private int animFrame = 0;
 	private int FPS = 5;
 	private int counter = 0;
@@ -81,22 +81,35 @@ public class Player implements Mob {
 		this(g);
 		xPos = x;
 		yPos = y;
-		dead = false;
-		direction = 180;
 	}
 	
 	public Player(Game game){
 		input = new InputHandler();
 		this.game = game;
-		
-		img = walk_r.getImage();
-		//TODO set img based on movement state
+		reset();
+	}
+	
+	public void reset(){
+		direction = 180;
+		health = MAX_HEALTH;
 	}
 	
 	public void init() {
 		
 	}
 
+	public boolean isDead(){
+		return dead;
+	}
+	
+	public void attack(){
+		for(Mob enemy : game.enemies){
+			if(Math.abs(enemy.getX() - xPos) < range && Math.abs(enemy.getY() - yPos) < range){
+				enemy.damage(damage);
+			}
+		}
+	}
+	
 	public void damage(int damageTaken){
 		health -= damageTaken;
 	}
@@ -105,6 +118,12 @@ public class Player implements Mob {
 		xVelocity = 0;
 		yVelocity = 0;
 		
+		if(dead && input.restart.isPressed()){
+			game.restart();
+		}
+		if(input.attack.isPressed()){
+			attacking = true;
+		}
 		if(input.up.isPressed()){
 			yVelocity -= speed / 60;
 		}
@@ -117,6 +136,7 @@ public class Player implements Mob {
 		if(input.right.isPressed()){
 			xVelocity += speed / 60;
 		}
+		
 			
 		nextX = (xPos + xVelocity);
 		nextY = (yPos + yVelocity);
@@ -174,27 +194,52 @@ public class Player implements Mob {
 		}
 		
 		if(direction >= 45 && direction <= 135){
-			if(img != walk_r.getImage()){
-				img = walk_r.getImage();
-				animFrame = 0;
+			if(!attacking){
+				if(img != walk_r.getImage()){
+					img = walk_r.getImage();
+					animFrame = 0;
+				}
+			} else {
+				if(img != attack_r.getImage()){
+					img = attack_r.getImage();
+					animFrame = 0;
+				}
 			}
 		}
 		else if(direction > 135 && direction < 225){
-			if(img != walk_d.getImage()){
-				img = walk_d.getImage();
-				animFrame = 0;
+			if(!attacking){
+				if(img != walk_d.getImage()){
+					img = walk_d.getImage();
+					animFrame = 0;
+				}
+			} else {
+				if(img != attack_d.getImage()){
+					img = attack_d.getImage();
+				}
 			}
 		}
 		else if(direction >= 225 && direction <= 315){
-			if(img != walk_l.getImage()){	
-				img = walk_l.getImage();
-				animFrame = 0;
+			if(!attacking){
+				if(img != walk_l.getImage()){	
+					img = walk_l.getImage();
+					animFrame = 0;
+				}
+			} else {
+				if(img != attack_l.getImage()){
+					img = attack_l.getImage();
+				}
 			}
 		}
 		else if((direction > 315 && direction < 360) || (direction >= 0 && direction < 45)){
-			if(img != walk_u.getImage()){
-				img = walk_u.getImage();
-				animFrame = 0;
+			if(!attacking){
+				if(img != walk_u.getImage()){
+					img = walk_u.getImage();
+					animFrame = 0;
+				}
+			} else {
+				if(img != attack_u.getImage()){
+					img = attack_u.getImage();
+				}
 			}
 		}
 		
@@ -202,10 +247,20 @@ public class Player implements Mob {
 			game.loadNextLevel();
 		}
 		
+		FPS = attacking ? 20 : 5;
+		
 		counter ++;
 		if(counter > 60/FPS){
 			counter = 0;
-			if(moving){
+			if(attacking){
+				animFrame ++;
+				if(animFrame >= (img.getWidth() / img.getHeight(null))){
+					animFrame = 0;
+					attack();
+					attacking = false;
+				}
+			}
+			else if(moving){
 				animFrame ++;
 				if(animFrame >= (img.getWidth() / img.getHeight(null))){
 					animFrame = 0;
@@ -259,13 +314,15 @@ public class Player implements Mob {
 				g.fillOval(drawPosX + (int)(boundingBox[0] * Game.UNIT), drawPosY + (int)(boundingBox[3] * Game.UNIT), 4, 4);
 				g.fillOval(drawPosX + (int)(boundingBox[2] * Game.UNIT), drawPosY + (int)(boundingBox[1] * Game.UNIT), 4, 4);
 				g.fillOval(drawPosX + (int)(boundingBox[2] * Game.UNIT), drawPosY + (int)(boundingBox[3] * Game.UNIT), 4, 4);
-				
-				g.fillRect(drawPosX - 10, drawPosY, 10, Game.UNIT);
-				g.setColor(Color.RED);
-				g.fillRect(drawPosX - 10, drawPosY, 10, Game.UNIT - (int)(Game.UNIT * ((double)health/MAX_HEALTH)));
-				g.setColor(Color.BLACK);
-				g.drawRect(drawPosX - 10, drawPosY, 10, Game.UNIT);
 			}	
+			
+			//draw health bar
+			g.setColor(Color.RED);
+			g.fillRect(20, 20, 200, 20);
+			g.setColor(Color.GREEN);
+			g.fillRect(20, 20, (int)(200 * health/MAX_HEALTH), 20);
+			g.setColor(Color.BLACK);
+			g.drawRect(20,20,200,20);
 		}
 	}
 }

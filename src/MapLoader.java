@@ -42,13 +42,18 @@ public class MapLoader {
 			g.player = new Player(g);
 		}
 		
+		if(g.getLevel() == 1){
+			g.player.reset();
+		}
+		
 		try{
 			//load map and player position
+			g.enemies = new ArrayList<Mob>(); //temp
 			img = ImageIO.read(new File("levels/" + level +"/map.png"));
 			processImage(img, g);
 			
 			//load enemies
-			g.enemies = new ArrayList<Mob>();
+			//g.enemies = new ArrayList<Mob>();
 			fileInput = new Scanner(new File("levels/" + level +"/enemies.dat"));
 			
 			while(fileInput.hasNext()){
@@ -122,6 +127,12 @@ public class MapLoader {
 	        		type = TileType.ladder;
 	        		tileHeight = Game.WALL_HEIGHT;
 	        		g.player.setExit(x, y);
+	        	}
+	        	
+	        	if(tileHeight == 0 && tileColor.getBlue() == 255){
+	        		Enemy e = new Enemy(g, g.player);
+	        		e.setPosition(x, y);
+	        		g.enemies.add(e);
 	        	}
 	        	
 	        	//if we're on ground level, custom loading parameters

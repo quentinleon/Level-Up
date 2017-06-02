@@ -146,5 +146,10 @@ public class Renderer extends JPanel {
 		//draw transition cover
 		g.setColor(new Color(0,0,0, game.getTransitionAlpha()));
 		g.fillRect(0,0, getWidth(), getHeight());
+		
+		if(game.player.isDead()){
+			g.setColor(Color.RED);
+			g.fillRect(0,0, getWidth(), getHeight());
+		}
 	}
 }

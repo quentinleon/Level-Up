@@ -26,6 +26,22 @@ public class Enemy implements Mob{
 	
 	BufferedImage img;
 	
+	public Enemy(Game g, Mob target){ 
+		int level = g.getLevel();
+		//System.out.println("Loading level " + level + " enemy!");
+		if(level == 5){
+			loadEnemy(g, target, "piskel", 1, 1, 3);
+		} else if(level == 4){
+			loadEnemy(g, target, "piskel", 2, 2, 3);
+		} else if(level == 3){
+			loadEnemy(g, target, "piskel", 3, 2, 3);
+		} else if(level == 2){
+			loadEnemy(g, target, "piskel", 4, 3, 4);
+		} else if(level == 1){
+			loadEnemy(g, target, "fireMonster", 6, 4, 5);
+		}
+	}
+	
 	public Enemy(Game g, Mob target, String name){ 
 		if(name.equals("fire1")){
 			loadEnemy(g, target, "fireMonster", 1, 2, 3);
@@ -149,7 +165,7 @@ public class Enemy implements Mob{
 	
 	public boolean inSight(){
 		boolean close = false;
-		if (( Math.abs(playerX - xPos) <= 7 && Math.abs(playerY - yPos) <= 7 ) == true){
+		if (( Math.abs(playerX - xPos) <= 5 && Math.abs(playerY - yPos) <= 5 ) == true){
 			close = true;
 		}
 		return close;
