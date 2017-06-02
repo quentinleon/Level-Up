@@ -9,15 +9,19 @@ public class MapSaver {
 		System.out.println("Saving " + path);
 		String nl = System.getProperty("line.separator"); //get system newline
 	
+		//create a file writer
 		BufferedWriter writer = null;
 		
 		try{
+			//select the designated path
 			File file = new File("saves/" + path);
 			writer = new BufferedWriter(new FileWriter(file));
 			String str;
 			
+			//start writing
 			writer.write("#this is a comment");
 			
+			//get the game's objects
 			TileMap map = game.map;
 			Player player = game.player;
 			ArrayList<Mob> enemies = game.enemies;
@@ -33,7 +37,7 @@ public class MapSaver {
 			str = "p(" + player.getX() + "," + player.getY() + ")" + nl;
 			writer.write(str + nl);
 			
-			//TODO save mobs
+			//save mobs
 			writer.write("# mobs" + nl);
 			for(Mob enemy : enemies){
 				str = "p(" + enemy.getX() + "," + enemy.getY() + ")" + enemy.getName() + nl;
@@ -43,8 +47,8 @@ public class MapSaver {
 			
 			//save the tiles
 			writer.write("# tiles");
-			for(int y = 0; y < map.height; y++){
-				for(int x = 0; x < map.width; x++){
+			for(int y = 0; y < map.getHeight(); y++){
+				for(int x = 0; x < map.getWidth(); x++){
 					Tile t = map.getTile(x, y);
 					str = "t(" + x + "," + y + ":" + t.getHeight() +")" + t.getType() + nl;
 					writer.write(str);
@@ -54,6 +58,7 @@ public class MapSaver {
 			e.printStackTrace();
 		} finally {
 			try{
+				//close the writer when we're done
 				writer.close();
 			} catch (Exception e) {
 				

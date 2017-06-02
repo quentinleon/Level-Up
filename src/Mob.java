@@ -1,10 +1,9 @@
 import java.awt.Graphics;
 
 public interface Mob {
-	public void init(); //called once at game start
 	public void update(); //called 60 times a second
-	public void draw(Graphics g, Camera cam); 
-	public void damage(int damage);
+	public void draw(Graphics g, Camera cam); //called by the renderer and is used to draw itself into the game scene
+	public void damage(int damage); //apply <damage> amount of damage to the Mob
 	public double getX();
 	public double getY();
 	public int getHealth();

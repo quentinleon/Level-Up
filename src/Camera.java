@@ -1,3 +1,4 @@
+//Camera follows a target with offsets. These offsets can be used to center the target or pan the camera about the target.
 
 public class Camera {
 	private Mob target;
@@ -11,10 +12,8 @@ public class Camera {
 		this.target = target;
 	}
 	
-	public void init(){
-		
-	}
-	
+	//Set the camera's position to the target's position plus offsets
+	//(Called 60 times a second from Game update loop)
 	public void update(){
 		xPos = target.getX() - xOffset;
 		yPos = target.getY() - yOffset;

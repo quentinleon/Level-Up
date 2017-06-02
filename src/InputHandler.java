@@ -7,6 +7,7 @@ public class InputHandler implements KeyListener {
 		return this;
 	}
 	
+	//subclass key holds a boolean for each key with a toggle and get method
 	public class Key{
 		private boolean pressed = false;
 		
@@ -19,6 +20,7 @@ public class InputHandler implements KeyListener {
 		}
 	}
 	
+	//create the keys we need
 	public Key up = new Key();
 	public Key down = new Key();
 	public Key left = new Key();
@@ -26,11 +28,13 @@ public class InputHandler implements KeyListener {
 	public Key attack = new Key();
 	public Key restart = new Key();
 	
-	@Override
+	//this is a function of KeyListener, looks for key presses
+	@Override 
 	public void keyPressed(KeyEvent e) {
 		toggleKey(e.getKeyCode(), true);
 	}
 
+	//this is a function of KeyListener, looks for key releases
 	@Override
 	public void keyReleased(KeyEvent e) {
 		toggleKey(e.getKeyCode(), false);
@@ -39,6 +43,7 @@ public class InputHandler implements KeyListener {
 	@Override
 	public void keyTyped(KeyEvent e) {}
 	
+	//Toggle all the keys we have based on if the designated keycode was pressed or released
 	public void toggleKey(int keyCode, boolean isPressed){
 		if(keyCode == KeyEvent.VK_W || keyCode == KeyEvent.VK_UP) {
 			up.toggle(isPressed);

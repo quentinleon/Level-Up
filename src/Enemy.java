@@ -9,23 +9,22 @@ import javax.imageio.ImageIO;
 public class Enemy implements Mob{
 	
 	private Game game;
-	private int health;
 	private String name;
+	
 	private double xPos;
 	private double yPos;
+	
 	private Mob target;
+	private int health;
 	private int damageValue;
 	private int speed;
-	private double playerX;
-	private double playerY;
+	
 	private int tickCount;
 	private final double[] boundingBox = {.2,.6,.8,.8};
 	
-	private int animFrame = 0;
-	private int FPS = 5;
-	
 	BufferedImage img;
 	
+	//This constructor is for quick enemy spawning but with different stats based on level
 	public Enemy(Game g, Mob target){ 
 		int level = g.getLevel();
 		//System.out.println("Loading level " + level + " enemy!");
@@ -42,6 +41,7 @@ public class Enemy implements Mob{
 		}
 	}
 	
+	//TODO This constructor is for loading mobs from a file by name
 	public Enemy(Game g, Mob target, String name){ 
 		if(name.equals("fire1")){
 			loadEnemy(g, target, "fireMonster", 1, 2, 3);
@@ -52,10 +52,12 @@ public class Enemy implements Mob{
 		}
 	}
 	
+	//Ugly constructor, don't use (unless absolutely necessary)
 	public Enemy(Game game, Mob target, String name, int healthNumber, int damageNumber, int speedNumber){
 		loadEnemy(game, target, name, healthNumber, damageNumber, speedNumber);
 	}
 	
+	//initializes the enemy with its stats and loads its sprite sheet
 	private void loadEnemy(Game game, Mob target, String name, int healthNumber, int damageNumber, int speedNumber){
 		this.game = game;
 		this.target = target;
@@ -89,20 +91,21 @@ public class Enemy implements Mob{
 		return name;
 	}
 	
-	public void init() {
-
-	}
-
-	private int counter = 0;
-	
+	//instance variables for movement and collisions
 	private double nextX;
 	private double nextY;
 	
+	//instance variables for animations
+	private int counter = 0;
+	private int animFrame = 0;
+	private int FPS = 5;
+	
+	//(Called 60 times a second from Game update loop)
 	public void update() {
+		
 		if(health > 0) {
-			playerX = target.getX();
-			playerY = target.getY();
-			
+
+			//Loop through the spreadsheet at <FPS> frames per second
 			counter ++;
 			if(counter > 60/FPS){
 				counter = 0;
@@ -114,40 +117,43 @@ public class Enemy implements Mob{
 			
 			double inrange = .5;
 			
-			//if we are close, but not too close on the X, move the X
-			if(inSight() && Math.abs(playerX - xPos) > inrange){
-				if (playerX > xPos){
+			//if we are close, but not too close on the X, set our desired position on the X axis (nextX)
+			if(inSight() && Math.abs(target.getX() - xPos) > inrange){
+				if (target.getX() > xPos){
 					nextX = xPos + (speed / 60.0);
 				}
-				else if (playerX < xPos){
+				else if (target.getX() < xPos){
 					nextX = xPos - (speed / 60.0);
 				}
 			} 
-			//if we are close, but not too close on the Y, move the Y
-			if(inSight() && Math.abs(playerY - yPos) > inrange){
-				if (playerY > yPos){
+			//if we are close, but not too close on the Y, set our desired position on the Y axis (nextY)
+			if(inSight() && Math.abs(target.getY() - yPos) > inrange){
+				if (target.getY() > yPos){
 					nextY = yPos + (speed / 60.0);
 				}
-				else if (playerY < yPos){
+				else if (target.getY() < yPos){
 					nextY = yPos - (speed / 60.0);
 				}
 			}
 			
+			//can we move onto our X axis desired position? (nextX) if we can, then do it
 			if(game.map.isTraversable((int)(nextX + boundingBox[0]), (int)(yPos + boundingBox[1]) ) 
 					&& game.map.isTraversable((int)(nextX + boundingBox[2]), (int)(yPos + boundingBox[3]) )){
 				xPos = nextX;
 			}
 			
+			//can we move onto our Y axis desired position? (nextY) if we can, then do it
 			if(game.map.isTraversable((int)(xPos + boundingBox[0]), (int)(nextY + boundingBox[1]) )
 					&& game.map.isTraversable((int)(xPos + boundingBox[2]), (int)(nextY + boundingBox[3]) )){
 				yPos = nextY;
 			}
 			
 			//if we are very close to the player, start counting
-			if (( Math.abs(playerX - xPos) <= inrange * 2 && Math.abs(playerY - yPos) <= inrange * 2 ) == true){
+			if (( Math.abs(target.getX() - xPos) <= inrange * 2 && Math.abs(target.getY() - yPos) <= inrange * 2 ) == true){
 				tickCount++;
 			}
 			
+			//every second spent close to the player, attack him
 			if (tickCount / 60 >= 1){
 				tickCount = 0;
 				attack(damageValue);	
@@ -155,25 +161,30 @@ public class Enemy implements Mob{
 		}
 	}
 	
+	//do damage to the target
 	public void attack(int damage){
 		target.damage(damage);
 	}
 	
+	//take damage
 	public void damage(int damage){
 		health -= damage;
 	}
 	
+	//is the target close enough to move towards?
+	//TODO update to use sight lines?
 	public boolean inSight(){
 		boolean close = false;
-		if (( Math.abs(playerX - xPos) <= 5 && Math.abs(playerY - yPos) <= 5 ) == true){
+		if (( Math.abs(target.getX() - xPos) <= 5 && Math.abs(target.getY() - yPos) <= 5 ) == true){
 			close = true;
 		}
 		return close;
 	}
 	
+	//is the target close enough to hit
 	public boolean inRange(){
 		boolean damageDistance = false;
-		if (( Math.abs(playerX - xPos) <= 1 && Math.abs(playerY - yPos) <= 1 ) == true){
+		if (( Math.abs(target.getX() - xPos) <= 1 && Math.abs(target.getY() - yPos) <= 1 ) == true){
 			damageDistance = true;
 			tickCount++;
 			System.out.println(tickCount);

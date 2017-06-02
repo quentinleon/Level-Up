@@ -4,6 +4,7 @@ import javax.swing.JFrame;
 
 public class Main {
 	
+	//Call this to start the magic
 	public static void main(String args[]){
 		Game game = new Game();
 		JFrame frame = new JFrame("Level-Up"); //Create a new window named "Level-Up"

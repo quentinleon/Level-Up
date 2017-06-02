@@ -6,6 +6,9 @@ import javax.imageio.ImageIO;
 
 import java.util.Random;
 
+//Tile type is a collection of "static objects" (an enum), one for every different type of tile
+//this is useful so that we don't need to have the same tile texture saved in memory for each stone tile
+//we can save just one copy of the stone texture and access it from here
 public enum TileType {
 	
 	stone("stone"),
@@ -21,9 +24,11 @@ public enum TileType {
 	private final String name;
 	private BufferedImage img;
 	
+	//each tile type has a "name" (filepath)
 	TileType(String name){
 		this.name = name;
 		
+		//load the image associated with the tileType
 		img = null;
 		try{
 			img = ImageIO.read(new File("resources/tiles/"+name+".png"));
@@ -36,14 +41,6 @@ public enum TileType {
 		return img;
 	}
 	
-	private static final TileType[] VALUES = values();
-	private static final int SIZE = VALUES.length - 1;
-	private static final Random RANDOM = new Random();
-	
-	public static TileType getRandomTile(){
-		return VALUES[RANDOM.nextInt(SIZE)];
-	}
-	
 	public String getName(){
 		return name;
 	}
@@ -52,6 +49,7 @@ public enum TileType {
 		return getName();
 	}
 	
+	//return the tileType from a string
 	public static TileType fromString(String s){
 		for(TileType t: TileType.values()){
 			if(t.name().equals(s)){

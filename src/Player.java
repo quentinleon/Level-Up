@@ -9,42 +9,41 @@ import javax.imageio.ImageIO;
 
 public class Player implements Mob {
 
-	public InputHandler input;
+	private InputHandler input;
 	private Game game;
 	
-	private double xPos = 0;
-	private double yPos = 0;
+	//Main logic variables
+	private double xPos;
+	private double yPos;
+	private int health;
+	private int direction;
 	
+	//A bunch of constants
 	private final double speed = 5;
 	private final double[] boundingBox = {.3,.7,.7,.9};
+	private final int MAX_HEALTH = 20;;
+	private final int damage = 2;
+	private final double range = 1;
 	
+	//The exit x and y coordinates
 	private int exitX;
 	private int exitY;
 	
-	double nextX;
-	double nextY;
-	double xVelocity;
-	double yVelocity;
-	
+	//current player states (used for animations)
 	private boolean moving;
 	private boolean attacking;
-	
-	private int direction;
-	
-	private final int MAX_HEALTH = 20;;
-	private int health = MAX_HEALTH;
-	private int damage = 2;
-	private double range = 1;
-	
 	private boolean dead;
 	
 	//current image displayed
 	BufferedImage img;
 	
+	
+	//this subclass is used to load and hold spritesheets
 	class Animation {
 		private BufferedImage image;
-		private int fps;
+		private int fps; // not fully implemented, but could enable variable fps animations
 		
+		//load the image based on path
 		public Animation(String path, int fps){
 			this.fps = fps;
 			image = null;
@@ -63,6 +62,7 @@ public class Player implements Mob {
 			return fps;
 		}
 	}
+	//all the different animations being used currently
 	private Animation walk_u = new Animation("walk_u", 5);
 	private Animation walk_d = new Animation("walk_d", 5);
 	private Animation walk_l = new Animation("walk_l", 5);
@@ -73,10 +73,6 @@ public class Player implements Mob {
 	private Animation attack_l = new Animation("attack_l", 5);
 	private Animation attack_r = new Animation("attack_r", 5);
 	
-	private int animFrame = 0;
-	private int FPS = 5;
-	private int counter = 0;
-	
 	public Player(Game g, double x, double y){
 		this(g);
 		xPos = x;
@@ -84,24 +80,25 @@ public class Player implements Mob {
 	}
 	
 	public Player(Game game){
-		input = new InputHandler();
+		this.input = new InputHandler();
 		this.game = game;
-		reset();
-	}
-	
-	public void reset(){
 		direction = 180;
-		health = MAX_HEALTH;
+		resetHealth();
 	}
 	
-	public void init() {
-		
+	public void resetHealth(){
+		health = MAX_HEALTH;
 	}
 
 	public boolean isDead(){
 		return dead;
 	}
 	
+	public InputHandler getInput() {
+		return input;
+	}
+	
+	//do damage to enemies in range
 	public void attack(){
 		for(Mob enemy : game.enemies){
 			if(Math.abs(enemy.getX() - xPos) < range && Math.abs(enemy.getY() - yPos) < range){
@@ -110,47 +107,57 @@ public class Player implements Mob {
 		}
 	}
 	
+	//take damage
 	public void damage(int damageTaken){
 		health -= damageTaken;
 	}
 	
+	//animation instance variables
+	private int animFrame = 0;
+	private int FPS = 5;
+	private int counter = 0;
+	
 	public void update() {
-		xVelocity = 0;
-		yVelocity = 0;
+		double xVelocity = 0;
+		double yVelocity = 0;
 		
-		if(dead && input.restart.isPressed()){
+		//Grab inputs
+		if(dead && getInput().restart.isPressed()){
 			game.restart();
 		}
-		if(input.attack.isPressed()){
+		if(getInput().attack.isPressed()){
 			attacking = true;
 		}
-		if(input.up.isPressed()){
+		if(getInput().up.isPressed()){
 			yVelocity -= speed / 60;
 		}
-		if(input.down.isPressed()){
+		if(getInput().down.isPressed()){
 			yVelocity += speed / 60;
 		}
-		if(input.left.isPressed()){
+		if(getInput().left.isPressed()){
 			xVelocity -= speed / 60;
 		}
-		if(input.right.isPressed()){
+		if(getInput().right.isPressed()){
 			xVelocity += speed / 60;
 		}
 		
-			
-		nextX = (xPos + xVelocity);
-		nextY = (yPos + yVelocity);
+		//the desired positions on each axes
+		double nextX = (xPos + xVelocity);
+		double nextY = (yPos + yVelocity);
 		
+		//is the desired location on the X axis open? if so, move there
 		if(game.map.isTraversable((int)(nextX + boundingBox[0]), (int)(yPos + boundingBox[1]) ) 
 				&& game.map.isTraversable((int)(nextX + boundingBox[2]), (int)(yPos + boundingBox[3]) )){
 			xPos = nextX;
 		}
 		
+		//is the desired location on the Y axis open? if so, move there
 		if(game.map.isTraversable((int)(xPos + boundingBox[0]), (int)(nextY + boundingBox[1]) )
 				&& game.map.isTraversable((int)(xPos + boundingBox[2]), (int)(nextY + boundingBox[3]) )){
 			yPos = nextY;
 		}
 		
+		//set moving animation state based on velocity
 		if(xVelocity != 0 || yVelocity != 0){
 			moving = true;
 		}
@@ -158,7 +165,7 @@ public class Player implements Mob {
 			moving = false;
 		}
 		
-		//find the direction player is facing, use for animation choosing and attack
+		//find the direction player is facing based on velocity
 		if(xVelocity == 0 && yVelocity < 0){
 			direction = 0;
 		}
@@ -183,16 +190,8 @@ public class Player implements Mob {
 		else if(xVelocity < 0 && yVelocity < 0){
 			direction = 315;
 		}
-		//System.out.println(direction);
-		
-		if(health <= 0){
-			dead = true;
-			health = 0;
-		}
-		else{
-			dead = false;
-		}
-		
+
+		//use the direction and whether or not we are attacking to select an animation
 		if(direction >= 45 && direction <= 135){
 			if(!attacking){
 				if(img != walk_r.getImage()){
@@ -243,24 +242,41 @@ public class Player implements Mob {
 			}
 		}
 		
+		
+		//If we're next to the exit, load the next level
 		if(Math.abs(exitX - xPos) < .5 && Math.abs(exitY - yPos) < .5){
 			game.loadNextLevel();
 		}
 		
+		//if we have no health, set death state to true
+		if(health <= 0){
+			dead = true;
+			health = 0;
+		}
+		else{
+			dead = false;
+		}
+		
+		//if we're attacking, set the fps to 20, otherwise set it to 5
 		FPS = attacking ? 20 : 5;
 		
+		//Cycle through the sprite sheets at the designated fps
 		counter ++;
 		if(counter > 60/FPS){
 			counter = 0;
+			//if we're attacking
 			if(attacking){
 				animFrame ++;
+				//cycle through until the end of the sprite sheet
 				if(animFrame >= (img.getWidth() / img.getHeight(null))){
 					animFrame = 0;
+					//then call the attack method on the end of the animation
 					attack();
 					attacking = false;
 				}
 			}
 			else if(moving){
+				//cycle through animations if we're moving
 				animFrame ++;
 				if(animFrame >= (img.getWidth() / img.getHeight(null))){
 					animFrame = 0;
@@ -269,6 +285,8 @@ public class Player implements Mob {
 		}
 	}
 
+	//getter and setter methods
+	
 	public String getName(){
 		return "player";
 	}
@@ -301,6 +319,7 @@ public class Player implements Mob {
 		return yPos;
 	}
 
+	//draw the player
 	public void draw(Graphics g, Camera cam) {
 		if(img != null){
 			int drawPosX = (int)((xPos - cam.getX()) * Game.UNIT);
@@ -309,6 +328,7 @@ public class Player implements Mob {
 					img.getHeight(null) * animFrame, 0,
 					img.getHeight(null) * (animFrame + 1), img.getHeight(null), null);
 			if(game.debug){
+				//draw colliders if we're in debug mode
 				g.setColor(Color.GREEN);
 				g.fillOval(drawPosX + (int)(boundingBox[0] * Game.UNIT), drawPosY + (int)(boundingBox[1] * Game.UNIT), 4, 4);
 				g.fillOval(drawPosX + (int)(boundingBox[0] * Game.UNIT), drawPosY + (int)(boundingBox[3] * Game.UNIT), 4, 4);

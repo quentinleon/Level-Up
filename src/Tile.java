@@ -1,5 +1,6 @@
 import java.awt.image.BufferedImage;
 
+//this class holds a tileType and a height with methods to modify and retrieve these values
 public class Tile {
 	private TileType type;
 	private double height;
