@@ -18,6 +18,9 @@ public class Player implements Mob {
 	private final double speed = 5;
 	private final double[] boundingBox = {.3,.7,.7,.9};
 	
+	private int exitX;
+	private int exitY;
+	
 	double nextX;
 	double nextY;
 	double xVelocity;
@@ -193,7 +196,11 @@ public class Player implements Mob {
 				img = walk_u.getImage();
 				animFrame = 0;
 			}
-		}			
+		}
+		
+		if(Math.abs(exitX - xPos) < .5 && Math.abs(exitY - yPos) < .5){
+			game.loadNextLevel();
+		}
 		
 		counter ++;
 		if(counter > 60/FPS){
@@ -214,6 +221,11 @@ public class Player implements Mob {
 	public void setPosition(double x, double y){
 		xPos = x;
 		yPos = y;
+	}
+	
+	public void setExit(int x, int y){
+		exitX = x;
+		exitY = y;
 	}
 	
 	public void setHealth(int h){

@@ -8,7 +8,6 @@ import javax.swing.JPanel;
 public class Renderer extends JPanel {
 	private static final long serialVersionUID = 1L;
 
-	private Tile[][] map;	
 	private Game game;
 	
 	private Color shadow = new Color(0,0,0,120);
@@ -16,7 +15,6 @@ public class Renderer extends JPanel {
 			
 	public Renderer(Game game, InputHandler keyListener){
 		this.game = game;
-		map = game.map.getMap();
 		addKeyListener(keyListener);
 		setFocusable(true);
 	}
@@ -39,17 +37,17 @@ public class Renderer extends JPanel {
 				
 		//don't try to draw what's not there
 		if(xRange[0] < 0){xRange[0] = 0;}
-		if(xRange[1] >= map.length){xRange[1] = map.length;}
+		if(xRange[1] >= game.map.getMap().length){xRange[1] = game.map.getMap().length;}
 		if(yRange[0] < 0){yRange[0] = 0;}
-		if(yRange[1] >= map[0].length){yRange[1] = map[0].length;}
+		if(yRange[1] >= game.map.getMap()[0].length){yRange[1] = game.map.getMap()[0].length;}
 		
 		//draw base level
 		for(int y = yRange[0]; y < yRange[1]; y++){
 			for(int x = xRange[0]; x < xRange[1]; x++){
 				//if tile is on base level (0)
-				if(map[x][y].getHeight() == 0){
+				if(game.map.getMap()[x][y].getHeight() == 0){
 					//get the tile's image
-					BufferedImage img = map[x][y].getImage();
+					BufferedImage img = game.map.getMap()[x][y].getImage();
 					if(img != null){
 						//figure out where it should be drawn
 						int xPos = (int)((x - xOffset) * Game.UNIT);
@@ -75,14 +73,14 @@ public class Renderer extends JPanel {
 				//set draw color to transparent black
 				g.setColor(shadow);
 				//compute the height for each tile
-				int height = (int)(map[x][y].getHeight() * Game.UNIT);
+				int height = (int)(game.map.getMap()[x][y].getHeight() * Game.UNIT);
 				if(height > 0){
 					//draw the shadow
 					int xPos = (int)((x - xOffset) * Game.UNIT);
 					int yPos = (int)((y - yOffset) * Game.UNIT);
 										
 					//draw topShadow
-					if((y - 1) >= yRange[0] && map[x][y-1].getHeight() == 0){
+					if((y - 1) >= yRange[0] && game.map.getMap()[x][y-1].getHeight() == 0){
 						int[] xPoints = {xPos, xPos + (int)(height*SWS), xPos + Game.UNIT + (int)(height*SWS), xPos + Game.UNIT, xPos};
 						int[] yPoints = {yPos, yPos - (int)(height*SHS), yPos - (int)(height*SHS), yPos, yPos};
 						Polygon polygon = new Polygon(xPoints, yPoints, xPoints.length);
@@ -90,7 +88,7 @@ public class Renderer extends JPanel {
 					}
 
 					//draw sideShadow
-					if((x + 1) < xRange[1] && map[x + 1][y].getHeight() == 0){
+					if((x + 1) < xRange[1] && game.map.getMap()[x + 1][y].getHeight() == 0){
 						int[] xPoints = {xPos + Game.UNIT, xPos + (int)(height*SWS) + Game.UNIT, xPos + (int)(height*SWS) + Game.UNIT, xPos + Game.UNIT, xPos + Game.UNIT};
 						int[] yPoints = {yPos, yPos - (int)(height*SHS), yPos - (int)(height*SHS) + Game.UNIT, yPos + Game.UNIT, yPos};
 						Polygon polygon = new Polygon(xPoints, yPoints, xPoints.length);
@@ -115,10 +113,10 @@ public class Renderer extends JPanel {
 				//set draw color to transparent black
 				g.setColor(tempWallColor);
 				//compute the height for each tile
-				int topHeight = (int)(map[x][y].getHeight() * Game.UNIT);
-				int wallHeight = (int)(map[x][y].getHeight() + .9);
+				int topHeight = (int)(game.map.getMap()[x][y].getHeight() * Game.UNIT);
+				int wallHeight = (int)(game.map.getMap()[x][y].getHeight() + .9);
 				if(topHeight > 0){
-					BufferedImage img = map[x][y].getImage();
+					BufferedImage img = game.map.getMap()[x][y].getImage();
 					if(img != null){
 						int xPos = (int)((x - xOffset) * Game.UNIT);
 						int yPos = (int)((y - yOffset) * Game.UNIT);
@@ -130,6 +128,12 @@ public class Renderer extends JPanel {
 							g.drawImage(wall, xPos - 1, yPos - ((wallSegment) * Game.UNIT), xPos + Game.UNIT + 1, (yPos + Game.UNIT) - ((wallSegment) * Game.UNIT),
 									0, 0, wall.getWidth(null), wall.getHeight(null), null);
 						}
+						if(game.map.getMap()[x][y].getType() == TileType.ladder){
+							for(int wallSegment = 0; wallSegment < wallHeight; wallSegment++){
+								g.drawImage(TileType.ladderW.getImage(), xPos - 1, yPos - ((wallSegment) * Game.UNIT), xPos + Game.UNIT + 1, (yPos + Game.UNIT) - ((wallSegment) * Game.UNIT),
+										0, 0, wall.getWidth(null), wall.getHeight(null), null);
+							}
+						}
 						
 						//draw the top of the wall
 						g.drawImage(img, xPos - 1, yPos - topHeight, xPos + Game.UNIT + 1, (yPos + Game.UNIT) - topHeight,
@@ -138,5 +142,9 @@ public class Renderer extends JPanel {
 				}
 			}
 		}
+		
+		//draw transition cover
+		g.setColor(new Color(0,0,0, game.getTransitionAlpha()));
+		g.fillRect(0,0, getWidth(), getHeight());
 	}
 }

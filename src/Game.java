@@ -1,5 +1,6 @@
 import java.awt.Toolkit;
 import java.util.ArrayList;
+import java.awt.Color;
 import java.awt.Dimension;
 
 public class Game implements Runnable {	
@@ -7,6 +8,7 @@ public class Game implements Runnable {
 	public static final double TILE_SCALE = 5; //the factor to multiply the size with
 	public static final int UNIT = (int)(TILE_SIZE * TILE_SCALE); //Factor to multiply world coordinates into screenspace pixel coordinates
 	public static final double WALL_HEIGHT = 1.3;
+	public static final int START_LEVEL = 20;
 	
 	public TileMap map;
 	public Player player;
@@ -15,9 +17,15 @@ public class Game implements Runnable {
 	public Renderer renderer;
 	public boolean debug = false;
 	
+	private int blackAlpha = 500;
+	private boolean loadingNext = false;
+	
+	private int level = START_LEVEL;
+	private int[] goal;
+	
 	public Game () {
 		//if we can't load the map, load a default map
-		if(MapLoader.loadLevel("20", this) == false){
+		if(MapLoader.loadLevel(Integer.toString(level), this) == false){
 			enemies = new ArrayList<Mob>();
 			map = new TileMap(100,100);	
 			map.makeTestMap();
@@ -46,6 +54,21 @@ public class Game implements Runnable {
 		}
 	}
 	
+	public void loadNextLevel(){
+		if(!loadingNext){
+			level--;
+			loadingNext = true;
+		}
+	}
+	
+	public int getLevel(){
+		return level;
+	}
+	
+	public int getTransitionAlpha(){
+		return blackAlpha <= 255 ? blackAlpha : 255;
+	}
+	
 	long lastTime = System.currentTimeMillis();
 	double counter = 0;
 	
@@ -61,6 +84,22 @@ public class Game implements Runnable {
 			for(Mob mob : enemies){
 				mob.update();
 			}
+			
+			if(loadingNext){
+				blackAlpha += 255/60;
+				if(blackAlpha >= 255){
+					if(!MapLoader.loadLevel(Integer.toString(level), this)){
+						System.out.println("Failed to load level -" + level);
+					}
+					loadingNext = false;
+				}
+			} else {
+				blackAlpha -= 255/60;
+				if(blackAlpha < 0){
+					blackAlpha = 0;
+				}
+			}
+			
 		}
 		
 		renderer.repaint();

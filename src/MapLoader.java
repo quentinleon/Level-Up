@@ -110,16 +110,25 @@ public class MapLoader {
 	        		        	
 	        	double tileHeight = tileColor.equals(Color.WHITE) ? Game.WALL_HEIGHT : 0;
 	        	
+	        	TileType type = tileColor.equals(Color.WHITE) ? TileType.stone : TileType.floor;
+	        	
+	        	if(g.getLevel() == 0){
+	        		type = TileType.grass;
+	        	}
+	        	
 	        	if(tileHeight == 0 && tileColor.getGreen() == 255){
 	        		g.player.setPosition(x, y);
-	        		//put an upwards ladder
+	        		if(g.getLevel() != Game.START_LEVEL){
+	        			type = TileType.trapDoor;
+	        		}
 	        	}
 	        	
 	        	if(tileHeight == 0 && tileColor.getRed() == 255){
-	        		//put an exit ladder
+	        		type = TileType.ladder;
+	        		tileHeight = Game.WALL_HEIGHT;
+	        		g.player.setExit(x, y);
 	        	}
 	        	
-	        	TileType type = tileColor.equals(Color.WHITE) ? TileType.stone : TileType.cobbleStone;
 	        	g.map.setTile(x, y, type, tileHeight);
 
 	        }

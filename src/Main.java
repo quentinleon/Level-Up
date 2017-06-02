@@ -11,6 +11,7 @@ public class Main {
 		frame.setLocation(new Point(200,200)); //Set it's position
 		frame.setContentPane(game.renderer); //Make the game the frame content
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); //Enable the close button
+		frame.setExtendedState(java.awt.Frame.MAXIMIZED_BOTH); //maximize frame
 		frame.setVisible(true); //Show the frame
 	}
 	
