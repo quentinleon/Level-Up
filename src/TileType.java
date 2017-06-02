@@ -4,8 +4,6 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
-import java.util.Random;
-
 //Tile type is a collection of "static objects" (an enum), one for every different type of tile
 //this is useful so that we don't need to have the same tile texture saved in memory for each stone tile
 //we can save just one copy of the stone texture and access it from here
