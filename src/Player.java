@@ -79,6 +79,7 @@ public class Player implements Mob {
 		xPos = x;
 		yPos = y;
 		dead = false;
+		direction = 180;
 	}
 	
 	public Player(Game game){
@@ -169,25 +170,25 @@ public class Player implements Mob {
 			dead = false;
 		}
 		
-		if(direction >= 45 && direction < 135){
+		if(direction >= 45 && direction <= 135){
 			if(img != walk_r.getImage()){
 				img = walk_r.getImage();
 				animFrame = 0;
 			}
 		}
-		else if(direction >= 135 && direction < 225){
+		else if(direction > 135 && direction < 225){
 			if(img != walk_d.getImage()){
 				img = walk_d.getImage();
 				animFrame = 0;
 			}
 		}
-		else if(direction >= 225 && direction < 315){
+		else if(direction >= 225 && direction <= 315){
 			if(img != walk_l.getImage()){	
 				img = walk_l.getImage();
 				animFrame = 0;
 			}
 		}
-		else if((direction >= 315 && direction < 360) || (direction >= 0 && direction < 45)){
+		else if((direction > 315 && direction < 360) || (direction >= 0 && direction < 45)){
 			if(img != walk_u.getImage()){
 				img = walk_u.getImage();
 				animFrame = 0;
@@ -206,9 +207,21 @@ public class Player implements Mob {
 		}
 	}
 
+	public String getName(){
+		return "player";
+	}
+	
 	public void setPosition(double x, double y){
 		xPos = x;
 		yPos = y;
+	}
+	
+	public void setHealth(int h){
+		this.health = h;
+	}
+	
+	public int getHealth(){
+		return health;
 	}
 	
 	@Override

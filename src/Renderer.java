@@ -126,10 +126,10 @@ public class Renderer extends JPanel {
 						g.fillRect(xPos - 1, (yPos + Game.UNIT) - topHeight, Game.UNIT + 2, topHeight + 1);
 						
 						//TODO draw wall texture correctly
-						/*for(int wallSegment = 0; wallSegment < wallHeight; wallSegment++){
+						for(int wallSegment = 0; wallSegment < wallHeight; wallSegment++){
 							g.drawImage(wall, xPos - 1, yPos - ((wallSegment) * Game.UNIT), xPos + Game.UNIT + 1, (yPos + Game.UNIT) - ((wallSegment) * Game.UNIT),
 									0, 0, wall.getWidth(null), wall.getHeight(null), null);
-						}*/
+						}
 						
 						//draw the top of the wall
 						g.drawImage(img, xPos - 1, yPos - topHeight, xPos + Game.UNIT + 1, (yPos + Game.UNIT) - topHeight,

@@ -13,12 +13,12 @@ public class Game implements Runnable {
 	public ArrayList<Mob> enemies;
 	public Camera camera;
 	public Renderer renderer;
-	public boolean debug = true;
+	public boolean debug = false;
 	
 	public Game () {
-		enemies = new ArrayList<Mob>();
 		//if we can't load the map, load a default map
 		if(MapLoader.loadLevel("20", this) == false){
+			enemies = new ArrayList<Mob>();
 			map = new TileMap(100,100);	
 			map.makeTestMap();
 			
@@ -27,12 +27,8 @@ public class Game implements Runnable {
 			Enemy e1 = new Enemy(this, player, "fireMonster", 1, 1, 3);
 			Enemy e2 = new Enemy(this, player, "piskel", 1, 1, 4);
 			enemies.add(e1);
-			//enemies.add(e2);
+			enemies.add(e2);
 		}
-		
-		Enemy e1 = new Enemy(this, player, "fireMonster", 1, 1, 2);
-		Enemy e2 = new Enemy(this, player, "piskel", 1, 1, 2);
-		enemies.add(e2);
 		
 		//need to do this in game	
 		renderer = new Renderer(this, player.input.getKeyListener());

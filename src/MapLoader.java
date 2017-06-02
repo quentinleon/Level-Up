@@ -36,13 +36,37 @@ public class MapLoader {
 	public static boolean loadLevel(String level, Game g){
 		System.out.println("Loading level -" + level);
 		BufferedImage img = null;
+		Scanner fileInput = null;
+		
+		if(g.player == null){
+			g.player = new Player(g);
+		}
+		
 		try{
+			//load map and player position
 			img = ImageIO.read(new File("levels/" + level +"/map.png"));
 			processImage(img, g);
+			
+			//load enemies
+			g.enemies = new ArrayList<Mob>();
+			fileInput = new Scanner(new File("levels/" + level +"/enemies.dat"));
+			
+			while(fileInput.hasNext()){
+				String line = fileInput.nextLine();
+				if(line.length() > 0 && line.charAt(0) != '#'){
+					processLine(line, g);
+				}
+			}
 			return true;
 		} catch(IOException e){
 			System.out.println("Could not load level -" + level + "!");
 			return false;
+		} finally {
+			try{
+				fileInput.close();
+			} catch (Exception e) {
+
+			}
 		}
 	}
 
@@ -63,6 +87,13 @@ public class MapLoader {
 			double x = Double.parseDouble(input.substring(input.indexOf('(') + 1, input.indexOf(',')));
 			double y = Double.parseDouble(input.substring(input.indexOf(',') + 1, input.indexOf(')')));
 			g.player = new Player(g, x, y);
+		} else if(input.charAt(0) == 'e'){
+			double x = Double.parseDouble(input.substring(input.indexOf('(') + 1, input.indexOf(',')));
+			double y = Double.parseDouble(input.substring(input.indexOf(',') + 1, input.indexOf(')')));
+			String type = input.substring(input.indexOf(')') + 1);
+			Enemy enemy = new Enemy(g, g.player, type);
+			enemy.setPosition(x,y);
+			g.enemies.add(enemy);
 		}
 	
 	}
@@ -72,7 +103,6 @@ public class MapLoader {
 		int height = img.getHeight();
 		
 		g.map = new TileMap(width,height);
-		g.player = new Player(g);
 		
 	    for (int x = 0; x < width; x++) {
 	        for (int y = 0; y < height; y++) {
@@ -89,7 +119,8 @@ public class MapLoader {
 	        		//put an exit ladder
 	        	}
 	        	
-	        	g.map.setTile(x, y, TileType.fromColor(tileColor), tileHeight);
+	        	TileType type = tileColor.equals(Color.WHITE) ? TileType.stone : TileType.cobbleStone;
+	        	g.map.setTile(x, y, type, tileHeight);
 
 	        }
 	    }

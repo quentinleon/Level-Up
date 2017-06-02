@@ -14,6 +14,7 @@ public enum TileType {
 	sand( "sand"),
 	gravel("gravel"),
 	wall("wall"),
+	cobbleStone("cobblestone"),
 	none(null);
 	
 	private final String name;
