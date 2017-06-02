@@ -10,6 +10,7 @@ public class Enemy implements Mob{
 	
 	private Game game;
 	private int health;
+	private String name;
 	private double xPos;
 	private double yPos;
 	private Mob target;
@@ -18,34 +19,76 @@ public class Enemy implements Mob{
 	private double playerX;
 	private double playerY;
 	private int tickCount;
-	private final double[] boundingBox = {.0,.6,.9,.8};
+	private final double[] boundingBox = {.2,.6,.8,.8};
 	
 	private int animFrame = 0;
 	private int FPS = 5;
 	
 	BufferedImage img;
 	
+	public Enemy(Game g, Mob target){ 
+		int level = g.getLevel();
+		//System.out.println("Loading level " + level + " enemy!");
+		if(level == 5){
+			loadEnemy(g, target, "piskel", 1, 1, 3);
+		} else if(level == 4){
+			loadEnemy(g, target, "piskel", 2, 2, 3);
+		} else if(level == 3){
+			loadEnemy(g, target, "piskel", 3, 2, 3);
+		} else if(level == 2){
+			loadEnemy(g, target, "piskel", 4, 3, 4);
+		} else if(level == 1){
+			loadEnemy(g, target, "fireMonster", 6, 4, 5);
+		}
+	}
 	
-	public Enemy(Game game, Mob player, String name, int healthNumber, int damageNumber, int speedNumber){
-		health = healthNumber;
-		target = player;
-		damageValue = damageNumber;
-		speed = speedNumber;
-		playerX = target.getX();
-		playerY = target.getY();
+	public Enemy(Game g, Mob target, String name){ 
+		if(name.equals("fire1")){
+			loadEnemy(g, target, "fireMonster", 1, 2, 3);
+		} else if(name.equals("piskel1")){
+			loadEnemy(g, target, "piskel", 1, 1, 4);
+		} else {
+			System.out.println("Unknown enemy \"" + name + "\"");
+		}
+	}
+	
+	public Enemy(Game game, Mob target, String name, int healthNumber, int damageNumber, int speedNumber){
+		loadEnemy(game, target, name, healthNumber, damageNumber, speedNumber);
+	}
+	
+	private void loadEnemy(Game game, Mob target, String name, int healthNumber, int damageNumber, int speedNumber){
 		this.game = game;
+		this.target = target;
+		this.name = name;
+		this.health = healthNumber;
+		this.damageValue = damageNumber;
+		this.speed = speedNumber;
 		
 		img = null;
 		try{
 			img = ImageIO.read(new File("resources/mobs/enemy/" + name + ".png"));
 		} catch(IOException e){
-			System.out.println("Could not enemy sprite!");
+			System.out.println("Could not load enemy sprite!");
 		}
-		
-		xPos = 2;
-		yPos = 2;
 	}
 
+	public void setPosition(double x, double y){
+		xPos = x;
+		yPos = y;
+	}
+	
+	public void setHealth(int h){
+		this.health = h;
+	}
+	
+	public int getHealth(){
+		return health;
+	}
+	
+	public String getName(){
+		return name;
+	}
+	
 	public void init() {
 
 	}
@@ -56,59 +99,59 @@ public class Enemy implements Mob{
 	private double nextY;
 	
 	public void update() {
-		
-		playerX = target.getX();
-		playerY = target.getY();
-		
-		counter ++;
-		if(counter > 60/FPS){
-			counter = 0;
-			animFrame ++;
-			if(animFrame >= (img.getWidth() / img.getHeight(null))){
-				animFrame = 0;
+		if(health > 0) {
+			playerX = target.getX();
+			playerY = target.getY();
+			
+			counter ++;
+			if(counter > 60/FPS){
+				counter = 0;
+				animFrame ++;
+				if(animFrame >= (img.getWidth() / img.getHeight(null))){
+					animFrame = 0;
+				}
 			}
-		}
-		
-		double inrange = .5;
-		
-		//if we are close, but not too close on the X, move the X
-		if(inSight() && Math.abs(playerX - xPos) > inrange){
-			if (playerX > xPos){
-				nextX = xPos + (speed / 60.0);
+			
+			double inrange = .5;
+			
+			//if we are close, but not too close on the X, move the X
+			if(inSight() && Math.abs(playerX - xPos) > inrange){
+				if (playerX > xPos){
+					nextX = xPos + (speed / 60.0);
+				}
+				else if (playerX < xPos){
+					nextX = xPos - (speed / 60.0);
+				}
+			} 
+			//if we are close, but not too close on the Y, move the Y
+			if(inSight() && Math.abs(playerY - yPos) > inrange){
+				if (playerY > yPos){
+					nextY = yPos + (speed / 60.0);
+				}
+				else if (playerY < yPos){
+					nextY = yPos - (speed / 60.0);
+				}
 			}
-			else if (playerX < xPos){
-				nextX = xPos - (speed / 60.0);
+			
+			if(game.map.isTraversable((int)(nextX + boundingBox[0]), (int)(yPos + boundingBox[1]) ) 
+					&& game.map.isTraversable((int)(nextX + boundingBox[2]), (int)(yPos + boundingBox[3]) )){
+				xPos = nextX;
 			}
-		} 
-		//if we are close, but not too close on the Y, move the Y
-		if(inSight() && Math.abs(playerY - yPos) > inrange){
-			if (playerY > yPos){
-				nextY = yPos + (speed / 60.0);
+			
+			if(game.map.isTraversable((int)(xPos + boundingBox[0]), (int)(nextY + boundingBox[1]) )
+					&& game.map.isTraversable((int)(xPos + boundingBox[2]), (int)(nextY + boundingBox[3]) )){
+				yPos = nextY;
 			}
-			else if (playerY < yPos){
-				nextY = yPos - (speed / 60.0);
+			
+			//if we are very close to the player, start counting
+			if (( Math.abs(playerX - xPos) <= inrange * 2 && Math.abs(playerY - yPos) <= inrange * 2 ) == true){
+				tickCount++;
 			}
-		}
-		
-		if(game.map.isTraversable((int)(nextX + boundingBox[0]), (int)(yPos + boundingBox[1]) ) 
-				&& game.map.isTraversable((int)(nextX + boundingBox[2]), (int)(yPos + boundingBox[3]) )){
-			xPos = nextX;
-		}
-		
-		if(game.map.isTraversable((int)(xPos + boundingBox[0]), (int)(nextY + boundingBox[1]) )
-				&& game.map.isTraversable((int)(xPos + boundingBox[2]), (int)(nextY + boundingBox[3]) )){
-			yPos = nextY;
-		}
-		
-		//if we are very close to the player, start counting
-		if (( Math.abs(playerX - xPos) <= inrange * 2 && Math.abs(playerY - yPos) <= inrange * 2 ) == true){
-			tickCount++;
-		}
-		
-		if (tickCount / 60 >= 1){
-			tickCount = 0;
-			System.out.println("Attacked");
-			attack(damageValue);	
+			
+			if (tickCount / 60 >= 1){
+				tickCount = 0;
+				attack(damageValue);	
+			}
 		}
 	}
 	
@@ -122,7 +165,7 @@ public class Enemy implements Mob{
 	
 	public boolean inSight(){
 		boolean close = false;
-		if (( Math.abs(playerX - xPos) <= 7 && Math.abs(playerY - yPos) <= 7 ) == true){
+		if (( Math.abs(playerX - xPos) <= 5 && Math.abs(playerY - yPos) <= 5 ) == true){
 			close = true;
 		}
 		return close;
@@ -156,9 +199,11 @@ public class Enemy implements Mob{
 		if(img != null){
 			int drawPosX = (int)((xPos - cam.getX()) * Game.UNIT);
 			int drawPosY = (int)((yPos - cam.getY()) * Game.UNIT);
-			g.drawImage(img, drawPosX, drawPosY, drawPosX + Game.UNIT, drawPosY + Game.UNIT,
-					img.getHeight(null) * animFrame, 0,
-					img.getHeight(null) * (animFrame + 1), img.getHeight(null), null);
+			if(health > 0){
+				g.drawImage(img, drawPosX, drawPosY, drawPosX + Game.UNIT, drawPosY + Game.UNIT,
+						img.getHeight(null) * animFrame, 0,
+						img.getHeight(null) * (animFrame + 1), img.getHeight(null), null);
+			}
 			if(game.debug){
 				g.setColor(Color.BLUE);
 				g.fillOval(drawPosX + (int)(boundingBox[0] * Game.UNIT), drawPosY + (int)(boundingBox[1] * Game.UNIT), 4, 4);

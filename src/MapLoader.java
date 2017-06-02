@@ -36,13 +36,42 @@ public class MapLoader {
 	public static boolean loadLevel(String level, Game g){
 		System.out.println("Loading level -" + level);
 		BufferedImage img = null;
+		Scanner fileInput = null;
+		
+		if(g.player == null){
+			g.player = new Player(g);
+		}
+		
+		if(g.getLevel() == 1){
+			g.player.reset();
+		}
+		
 		try{
+			//load map and player position
+			g.enemies = new ArrayList<Mob>(); //temp
 			img = ImageIO.read(new File("levels/" + level +"/map.png"));
 			processImage(img, g);
+			
+			//load enemies
+			//g.enemies = new ArrayList<Mob>();
+			fileInput = new Scanner(new File("levels/" + level +"/enemies.dat"));
+			
+			while(fileInput.hasNext()){
+				String line = fileInput.nextLine();
+				if(line.length() > 0 && line.charAt(0) != '#'){
+					processLine(line, g);
+				}
+			}
 			return true;
 		} catch(IOException e){
 			System.out.println("Could not load level -" + level + "!");
 			return false;
+		} finally {
+			try{
+				fileInput.close();
+			} catch (Exception e) {
+
+			}
 		}
 	}
 
@@ -63,6 +92,13 @@ public class MapLoader {
 			double x = Double.parseDouble(input.substring(input.indexOf('(') + 1, input.indexOf(',')));
 			double y = Double.parseDouble(input.substring(input.indexOf(',') + 1, input.indexOf(')')));
 			g.player = new Player(g, x, y);
+		} else if(input.charAt(0) == 'e'){
+			double x = Double.parseDouble(input.substring(input.indexOf('(') + 1, input.indexOf(',')));
+			double y = Double.parseDouble(input.substring(input.indexOf(',') + 1, input.indexOf(')')));
+			String type = input.substring(input.indexOf(')') + 1);
+			Enemy enemy = new Enemy(g, g.player, type);
+			enemy.setPosition(x,y);
+			g.enemies.add(enemy);
 		}
 	
 	}
@@ -72,24 +108,40 @@ public class MapLoader {
 		int height = img.getHeight();
 		
 		g.map = new TileMap(width,height);
-		g.player = new Player(g);
 		
 	    for (int x = 0; x < width; x++) {
 	        for (int y = 0; y < height; y++) {
 	        	Color tileColor = new Color(img.getRGB(x, y), true);
 	        		        	
 	        	double tileHeight = tileColor.equals(Color.WHITE) ? Game.WALL_HEIGHT : 0;
+	        	TileType type = tileColor.equals(Color.WHITE) ? TileType.stone : TileType.floor;
 	        	
 	        	if(tileHeight == 0 && tileColor.getGreen() == 255){
 	        		g.player.setPosition(x, y);
-	        		//put an upwards ladder
+	        		if(g.getLevel() != Game.START_LEVEL){
+	        			type = TileType.trapDoor;
+	        		}
 	        	}
 	        	
 	        	if(tileHeight == 0 && tileColor.getRed() == 255){
-	        		//put an exit ladder
+	        		type = TileType.ladder;
+	        		tileHeight = Game.WALL_HEIGHT;
+	        		g.player.setExit(x, y);
 	        	}
 	        	
-	        	g.map.setTile(x, y, TileType.fromColor(tileColor), tileHeight);
+	        	if(tileHeight == 0 && tileColor.getBlue() == 255){
+	        		Enemy e = new Enemy(g, g.player);
+	        		e.setPosition(x, y);
+	        		g.enemies.add(e);
+	        	}
+	        	
+	        	//if we're on ground level, custom loading parameters
+	        	if(g.getLevel() == 0 && type != TileType.trapDoor){
+	        		type = tileColor.equals(Color.WHITE) ? TileType.sand : TileType.grass;
+	        		tileHeight = 0;
+	        	}
+
+	        	g.map.setTile(x, y, type, tileHeight);
 
 	        }
 	    }

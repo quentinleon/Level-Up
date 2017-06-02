@@ -7,4 +7,8 @@ public interface Mob {
 	public void damage(int damage);
 	public double getX();
 	public double getY();
+	public int getHealth();
+	public String getName();
+	public void setPosition(double x, double y);
+	public void setHealth(int h);
 }

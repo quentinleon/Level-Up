@@ -1,4 +1,5 @@
 import java.io.BufferedWriter;
+import java.util.ArrayList;
 import java.io.File;
 import java.io.FileWriter;
 
@@ -19,6 +20,7 @@ public class MapSaver {
 			
 			TileMap map = game.map;
 			Player player = game.player;
+			ArrayList<Mob> enemies = game.enemies;
 
 			//save map size
 			int[] mapSize = map.getSize();
@@ -33,6 +35,11 @@ public class MapSaver {
 			
 			//TODO save mobs
 			writer.write("# mobs" + nl);
+			for(Mob enemy : enemies){
+				str = "p(" + enemy.getX() + "," + enemy.getY() + ")" + enemy.getName() + nl;
+				writer.write(str);
+			}
+			writer.write(nl);
 			
 			//save the tiles
 			writer.write("# tiles");
